@@ -21,6 +21,12 @@ import "./interfaces/IERC1620.sol";
        - No risk of losing funds in temporary wallet due to browser/system crash or similar
        - No need to have the user transfer both ETH (to pay gas) and Token into temporary wallet to create
          a stream
+
+     Risk:
+       - Sablier streams can be cancelled both by sender or recipient. When a stream is cancelled, remaining funds
+         will be transferred back to the sender. In this scenario this means the funds will be sent back to the
+         SealedSablier contract, where they will be locked forever.
+         TODO: Think about possible fixes (maybe ERC20-approve original sender to transfer back canceled amounts?)
 */
 
 contract SealedSablier {
