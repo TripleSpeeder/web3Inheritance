@@ -6,12 +6,12 @@ const ERC20Mock = artifacts.require("./ERC20Mock.sol")
 contract("SealeadSablier", function(accounts) {
 
   let sealedSablier, erc20mock
-  let sender = accounts[1]
-  let receiver = accounts[2]
+  const sender = accounts[1]
+  const receiver = accounts[2]
 
   // Constants to find & decode CreateStream event
-  let topicHash = web3.utils.keccak256("CreateStream(uint256,address,address,uint256,address,uint256,uint256)")
-  let eventABI = [
+  const topicHash = web3.utils.keccak256("CreateStream(uint256,address,address,uint256,address,uint256,uint256)")
+  const eventABI = [
     {
       "indexed": true,
       "internalType": "uint256",
@@ -69,12 +69,6 @@ contract("SealeadSablier", function(accounts) {
     let multi = web3.utils.toBN(10).pow(decimals)
     let amount = tokens.mul(multi)
 
-    // mint required amount to sender
-    await erc20mock.mint(sender, amount)
-
-    // grant approval to sealedSablier contract to spend tokens
-    await erc20mock.approve(sealedSablier.address, amount, {from: sender})
-
     // startTime: Now + 5 minutes
     let startTime = web3.utils.toBN(Date.now() + (5*60))
     // duration: 30 days
@@ -84,6 +78,12 @@ contract("SealeadSablier", function(accounts) {
     // Sablier requires amount to be multiple of timedelta. So round down amount if necessary.
     let remainder = amount.mod(timedelta)
     amount = amount.sub(remainder)
+
+    // mint required amount to sender
+    await erc20mock.mint(sender, amount)
+
+    // grant approval to sealedSablier contract to spend tokens
+    await erc20mock.approve(sealedSablier.address, amount, {from: sender})
 
     // create stream
     // Parameters: address recipient, uint256 deposit, address tokenAddress, uint256 startTime, uint256 stopTime
