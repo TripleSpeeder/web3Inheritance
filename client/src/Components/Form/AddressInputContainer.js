@@ -40,7 +40,7 @@ const AddressInputContainer = ({setAddress, web3}) => {
             }
         }
         handleInput()
-    }, [input])
+    }, [input, setAddress, web3])
 
     const error = (addressInputState === addressInputStates.ADDRESS_INVALID)
     const loading = (addressInputState === addressInputStates.ADDRESS_RESOLVING)

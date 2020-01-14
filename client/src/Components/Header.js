@@ -11,7 +11,7 @@ function Header(props) {
         <Menu fixed='top'>
             <Container>
                 <Menu.Item as='a' header>
-                    Sablier Digital Heritage
+                    Digital Heritage powered by Sablier
                 </Menu.Item>
             </Container>
         </Menu>
