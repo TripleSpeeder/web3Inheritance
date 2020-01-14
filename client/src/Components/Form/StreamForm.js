@@ -1,11 +1,12 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import PropTypes from 'prop-types'
-import {Button, Form, Input} from 'semantic-ui-react'
+import {Button, Form, Input, Message} from 'semantic-ui-react'
 import TokenSelector from './TokenSelector'
 import AmountInputContainer from './AmountInputContainer'
 import AddressInputContainer from './AddressInputContainer'
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
+import bnToDisplayString from '@triplespeeder/bn2string'
 
 const tokenOptions = [
     {
@@ -37,6 +38,37 @@ const StreamForm = ({web3}) => {
     const [recipient, setRecipient] = useState('')
     const [startDate, setStartDate] = useState(new Date())
     const [days, setDays] = useState(1)
+
+    // summary
+    const [endDate, setEndDate] = useState(startDate)
+    const [dailyRate, setDailyRate] = useState({precise: '', rounded: '', amount:web3.utils.toBN(0)})
+
+    // calculate endDate
+    useEffect(() => {
+        return () => {
+            let msPerDay = 1000*60*60*24
+            let durationms = days * msPerDay
+            let endTimestamp = startDate.getTime() + durationms
+            setEndDate(new Date(endTimestamp))
+        }
+    }, [startDate, days])
+
+    // calculate daily rate
+    useEffect(() => {
+        const calcRate = () => {
+            let dailyAmount = amount.div(web3.utils.toBN(days))
+            let {precise, rounded} = bnToDisplayString({
+                value: dailyAmount,
+                decimals: decimals,
+                roundToDecimals: web3.utils.toBN(3)
+            })
+            setDailyRate({precise, rounded, amount: dailyAmount})
+        }
+        if (amount.gt(0)){
+            calcRate()
+        }
+    }, [amount, days])
+
 
     const onStartDateChange = (ev, data) => {
         const dateString = data.value
@@ -85,6 +117,13 @@ const StreamForm = ({web3}) => {
                     onChange={onDaysChange}
                 />
             </Form.Field>
+            <Message>
+                <Message.Header>Summary</Message.Header>
+                <Message.List>
+                    <Message.Item>Stream will end on {endDate.toString()}</Message.Item>
+                    <Message.Item>Stream rate is {dailyRate.rounded} per day</Message.Item>
+                </Message.List>
+            </Message>
             <Button type='submit'>Submit</Button>
         </Form>
     )
