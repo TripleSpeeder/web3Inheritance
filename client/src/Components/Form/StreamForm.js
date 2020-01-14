@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import PropTypes from 'prop-types'
-import {Button, Form} from 'semantic-ui-react'
+import {Button, Form, Input} from 'semantic-ui-react'
 import TokenSelector from './TokenSelector'
 import AmountInputContainer from './AmountInputContainer'
 import AddressInputContainer from './AddressInputContainer'
@@ -36,11 +36,18 @@ const StreamForm = ({web3}) => {
     const [amount, setAmount] = useState(web3.utils.toBN(0))
     const [recipient, setRecipient] = useState('')
     const [startDate, setStartDate] = useState(new Date())
+    const [days, setDays] = useState(1)
 
     const onStartDateChange = (ev, data) => {
         const dateString = data.value
         console.log('date changed: ' + dateString)
         setStartDate(new Date(dateString))
+    }
+
+    const onDaysChange = (ev) => {
+        const newDays = ev.target.value
+        console.log(`Days changed to ${newDays}`)
+        setDays(newDays)
     }
 
     return (
@@ -70,7 +77,13 @@ const StreamForm = ({web3}) => {
             </Form.Field>
             <Form.Field>
                 <label>For how long should the money be streamed?</label>
-                <input placeholder='5 years' />
+                <Input
+                    label={'days'}
+                    labelPosition={'right'}
+                    type={'number'}
+                    value={days}
+                    onChange={onDaysChange}
+                />
             </Form.Field>
             <Button type='submit'>Submit</Button>
         </Form>
