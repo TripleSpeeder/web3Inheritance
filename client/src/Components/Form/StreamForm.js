@@ -7,6 +7,7 @@ import AddressInputContainer from './AddressInputContainer'
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
 import bnToDisplayString from '@triplespeeder/bn2string'
+import dayjs from 'dayjs'
 
 const tokenOptions = [
     {
@@ -32,54 +33,43 @@ const tokenOptions = [
 ]
 
 const StreamForm = ({web3}) => {
+    const secondsPerDay = 24*60*60
     const [token, setToken] = useState(tokenOptions[0].value)
     const [decimals, setDecimals] = useState(web3.utils.toBN(18))   // TODO: Remove default value
     const [amount, setAmount] = useState(web3.utils.toBN(0))
     const [recipient, setRecipient] = useState('')
-    const [startDate, setStartDate] = useState(new Date())
-    const [days, setDays] = useState(1)
+    const [durationSeconds, setDurationSeconds] = useState(secondsPerDay)
 
     // summary
-    const [endDate, setEndDate] = useState(startDate)
+    const [endTimestamp, setEndTimestamp] = useState()
     const [dailyRate, setDailyRate] = useState({precise: '', rounded: '', amount:web3.utils.toBN(0)})
 
-    // calculate endDate
-    useEffect(() => {
-        return () => {
-            let msPerDay = 1000*60*60*24
-            let durationms = days * msPerDay
-            let endTimestamp = startDate.getTime() + durationms
-            setEndDate(new Date(endTimestamp))
-        }
-    }, [startDate, days])
-
-    // calculate daily rate
+    // calculate daily rate whenever amount or duration changes
     useEffect(() => {
         const calcRate = () => {
-            let dailyAmount = amount.div(web3.utils.toBN(days))
+            let amountPerSecond = amount.div(web3.utils.toBN(durationSeconds))
+            let amountPerDay = amountPerSecond.mul(web3.utils.toBN(secondsPerDay))
             let {precise, rounded} = bnToDisplayString({
-                value: dailyAmount,
+                value: amountPerDay,
                 decimals: decimals,
                 roundToDecimals: web3.utils.toBN(3)
             })
-            setDailyRate({precise, rounded, amount: dailyAmount})
+            setDailyRate({precise, rounded, amount: amountPerDay})
         }
         if (amount.gt(0)){
             calcRate()
         }
-    }, [amount, days])
+    }, [amount, durationSeconds])
 
-
-    const onStartDateChange = (ev, data) => {
-        const dateString = data.value
-        console.log('date changed: ' + dateString)
-        setStartDate(new Date(dateString))
-    }
-
+    // Calculate new duration and endTimestamp
     const onDaysChange = (ev) => {
         const newDays = ev.target.value
-        console.log(`Days changed to ${newDays}`)
-        setDays(newDays)
+        const seconds = parseInt(newDays)*secondsPerDay
+        console.log(`Days changed to ${newDays} (${seconds} seconds)`)
+        let timestamp = dayjs().unix() + seconds
+        console.log(`New endTimestamp: ${timestamp}`)
+        setDurationSeconds(seconds)
+        setEndTimestamp(timestamp)
     }
 
     return (
@@ -101,27 +91,22 @@ const StreamForm = ({web3}) => {
                 <AddressInputContainer setAddress={setRecipient} web3={web3}/>
             </Form.Field>
             <Form.Field>
-                <label>When should the stream start</label>
-                <SemanticDatepicker
-                    value={startDate}
-                    onChange={onStartDateChange}
-                />
-            </Form.Field>
-            <Form.Field>
                 <label>For how long should the money be streamed?</label>
                 <Input
                     label={'days'}
                     labelPosition={'right'}
                     type={'number'}
-                    value={days}
                     onChange={onDaysChange}
+                    min={1}
+                    max={3650}
+                    default={30}
                 />
             </Form.Field>
             <Message>
                 <Message.Header>Summary</Message.Header>
                 <Message.List>
-                    <Message.Item>Stream will end on {endDate.toString()}</Message.Item>
-                    <Message.Item>Stream rate is {dailyRate.rounded} per day</Message.Item>
+                    <Message.Item>Stream will run until {dayjs.unix(endTimestamp).toString()}</Message.Item>
+                    <Message.Item>{recipient} will receive {dailyRate.rounded} per day</Message.Item>
                 </Message.List>
             </Message>
             <Button type='submit'>Submit</Button>
