@@ -4,8 +4,6 @@ import {Button, Form, Input, Message} from 'semantic-ui-react'
 import TokenSelector from './TokenSelector'
 import AmountInputContainer from './AmountInputContainer'
 import AddressInputContainer from './AddressInputContainer'
-import SemanticDatepicker from 'react-semantic-ui-datepickers';
-import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
 import bnToDisplayString from '@triplespeeder/bn2string'
 import dayjs from 'dayjs'
 
@@ -38,7 +36,8 @@ const StreamForm = ({web3}) => {
     const [decimals, setDecimals] = useState(web3.utils.toBN(18))   // TODO: Remove default value
     const [amount, setAmount] = useState(web3.utils.toBN(0))
     const [recipient, setRecipient] = useState('')
-    const [durationSeconds, setDurationSeconds] = useState(secondsPerDay)
+    const [durationSeconds, setDurationSeconds] = useState(0)
+    const [valid, setValid] = useState(false)
 
     // summary
     const [endTimestamp, setEndTimestamp] = useState()
@@ -56,15 +55,30 @@ const StreamForm = ({web3}) => {
             })
             setDailyRate({precise, rounded, amount: amountPerDay})
         }
-        if (amount.gt(0)){
+        if (amount.gt(0) && (durationSeconds>0)){
             calcRate()
         }
     }, [amount, durationSeconds])
 
+    // Simple form validation. Should be replaced with sth like react-formik later
+    useEffect(() => {
+        console.log(`Checking form valid: amount ${amount} recipient ${recipient} duration ${durationSeconds}`)
+        const formValid = (
+            (amount.gtn(0)) &&
+            (recipient !== '') &&
+            (durationSeconds >= secondsPerDay))
+        console.log(`Valid: ${formValid}`)
+        setValid(formValid)
+    }, [amount, recipient, durationSeconds, secondsPerDay])
+
     // Calculate new duration and endTimestamp
     const onDaysChange = (ev) => {
         const newDays = ev.target.value
-        const seconds = parseInt(newDays)*secondsPerDay
+        let seconds = parseInt(newDays)*secondsPerDay
+        if (seconds.isNaN) {
+            console.log(`newDays is NAN`)
+            seconds=0
+        }
         console.log(`Days changed to ${newDays} (${seconds} seconds)`)
         let timestamp = dayjs().unix() + seconds
         console.log(`New endTimestamp: ${timestamp}`)
@@ -109,7 +123,7 @@ const StreamForm = ({web3}) => {
                     <Message.Item>{recipient} will receive {dailyRate.rounded} per day</Message.Item>
                 </Message.List>
             </Message>
-            <Button type='submit'>Submit</Button>
+            <Button type='submit' disabled={!valid}>Submit</Button>
         </Form>
     )
 }
