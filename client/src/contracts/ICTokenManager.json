@@ -90,21 +90,21 @@
     "absolutePath": "/home/michael/WebstormProjects/web3Inheritance/contracts/interfaces/ICTokenManager.sol",
     "exportedSymbols": {
       "ICTokenManager": [
-        179
+        156
       ]
     },
-    "id": 180,
+    "id": 157,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 153,
+        "id": 130,
         "literals": [
           "solidity",
           "0.5",
           ".11"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:3"
+        "src": "0:23:2"
       },
       {
         "baseContracts": [],
@@ -112,9 +112,9 @@
         "contractKind": "interface",
         "documentation": "@title CTokenManager Interface\n@author Sablier",
         "fullyImplemented": false,
-        "id": 179,
+        "id": 156,
         "linearizedBaseContracts": [
-          179
+          156
         ],
         "name": "ICTokenManager",
         "nodeType": "ContractDefinition",
@@ -122,21 +122,21 @@
           {
             "anonymous": false,
             "documentation": "@notice Emits when the owner discards a cToken.",
-            "id": 157,
+            "id": 134,
             "name": "DiscardCToken",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 156,
+              "id": 133,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 155,
+                  "id": 132,
                   "indexed": true,
                   "name": "tokenAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 157,
-                  "src": "208:28:3",
+                  "scope": 134,
+                  "src": "208:28:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -144,10 +144,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 154,
+                    "id": 131,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "208:7:3",
+                    "src": "208:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -158,28 +158,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "207:30:3"
+              "src": "207:30:2"
             },
-            "src": "188:50:3"
+            "src": "188:50:2"
           },
           {
             "anonymous": false,
             "documentation": "@notice Emits when the owner whitelists a cToken.",
-            "id": 161,
+            "id": 138,
             "name": "WhitelistCToken",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 160,
+              "id": 137,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 159,
+                  "id": 136,
                   "indexed": true,
                   "name": "tokenAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 161,
-                  "src": "339:28:3",
+                  "scope": 138,
+                  "src": "339:28:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -187,10 +187,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 158,
+                    "id": 135,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "339:7:3",
+                    "src": "339:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -201,30 +201,30 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "338:30:3"
+              "src": "338:30:2"
             },
-            "src": "317:52:3"
+            "src": "317:52:2"
           },
           {
             "body": null,
             "documentation": null,
-            "id": 166,
+            "id": 143,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "whitelistCToken",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 164,
+              "id": 141,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 163,
+                  "id": 140,
                   "name": "tokenAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 166,
-                  "src": "400:20:3",
+                  "scope": 143,
+                  "src": "400:20:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -232,10 +232,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 162,
+                    "id": 139,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "400:7:3",
+                    "src": "400:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -246,16 +246,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "399:22:3"
+              "src": "399:22:2"
             },
             "returnParameters": {
-              "id": 165,
+              "id": 142,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "430:0:3"
+              "src": "430:0:2"
             },
-            "scope": 179,
-            "src": "375:56:3",
+            "scope": 156,
+            "src": "375:56:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -263,23 +263,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 171,
+            "id": 148,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "discardCToken",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 169,
+              "id": 146,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 168,
+                  "id": 145,
                   "name": "tokenAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 171,
-                  "src": "460:20:3",
+                  "scope": 148,
+                  "src": "460:20:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -287,10 +287,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 167,
+                    "id": 144,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "460:7:3",
+                    "src": "460:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -301,16 +301,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "459:22:3"
+              "src": "459:22:2"
             },
             "returnParameters": {
-              "id": 170,
+              "id": 147,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "490:0:3"
+              "src": "490:0:2"
             },
-            "scope": 179,
-            "src": "437:54:3",
+            "scope": 156,
+            "src": "437:54:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -318,23 +318,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 178,
+            "id": 155,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isCToken",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 174,
+              "id": 151,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 173,
+                  "id": 150,
                   "name": "tokenAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 178,
-                  "src": "515:20:3",
+                  "scope": 155,
+                  "src": "515:20:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -342,10 +342,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 172,
+                    "id": 149,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "515:7:3",
+                    "src": "515:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -356,19 +356,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "514:22:3"
+              "src": "514:22:2"
             },
             "returnParameters": {
-              "id": 177,
+              "id": 154,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 176,
+                  "id": 153,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 178,
-                  "src": "560:4:3",
+                  "scope": 155,
+                  "src": "560:4:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -376,10 +376,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 175,
+                    "id": 152,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "560:4:3",
+                    "src": "560:4:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -389,40 +389,40 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "559:6:3"
+              "src": "559:6:2"
             },
-            "scope": 179,
-            "src": "497:69:3",
+            "scope": 156,
+            "src": "497:69:2",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 180,
-        "src": "86:482:3"
+        "scope": 157,
+        "src": "86:482:2"
       }
     ],
-    "src": "0:569:3"
+    "src": "0:569:2"
   },
   "legacyAST": {
     "absolutePath": "/home/michael/WebstormProjects/web3Inheritance/contracts/interfaces/ICTokenManager.sol",
     "exportedSymbols": {
       "ICTokenManager": [
-        179
+        156
       ]
     },
-    "id": 180,
+    "id": 157,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 153,
+        "id": 130,
         "literals": [
           "solidity",
           "0.5",
           ".11"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:3"
+        "src": "0:23:2"
       },
       {
         "baseContracts": [],
@@ -430,9 +430,9 @@
         "contractKind": "interface",
         "documentation": "@title CTokenManager Interface\n@author Sablier",
         "fullyImplemented": false,
-        "id": 179,
+        "id": 156,
         "linearizedBaseContracts": [
-          179
+          156
         ],
         "name": "ICTokenManager",
         "nodeType": "ContractDefinition",
@@ -440,21 +440,21 @@
           {
             "anonymous": false,
             "documentation": "@notice Emits when the owner discards a cToken.",
-            "id": 157,
+            "id": 134,
             "name": "DiscardCToken",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 156,
+              "id": 133,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 155,
+                  "id": 132,
                   "indexed": true,
                   "name": "tokenAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 157,
-                  "src": "208:28:3",
+                  "scope": 134,
+                  "src": "208:28:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -462,10 +462,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 154,
+                    "id": 131,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "208:7:3",
+                    "src": "208:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -476,28 +476,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "207:30:3"
+              "src": "207:30:2"
             },
-            "src": "188:50:3"
+            "src": "188:50:2"
           },
           {
             "anonymous": false,
             "documentation": "@notice Emits when the owner whitelists a cToken.",
-            "id": 161,
+            "id": 138,
             "name": "WhitelistCToken",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 160,
+              "id": 137,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 159,
+                  "id": 136,
                   "indexed": true,
                   "name": "tokenAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 161,
-                  "src": "339:28:3",
+                  "scope": 138,
+                  "src": "339:28:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -505,10 +505,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 158,
+                    "id": 135,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "339:7:3",
+                    "src": "339:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -519,30 +519,30 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "338:30:3"
+              "src": "338:30:2"
             },
-            "src": "317:52:3"
+            "src": "317:52:2"
           },
           {
             "body": null,
             "documentation": null,
-            "id": 166,
+            "id": 143,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "whitelistCToken",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 164,
+              "id": 141,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 163,
+                  "id": 140,
                   "name": "tokenAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 166,
-                  "src": "400:20:3",
+                  "scope": 143,
+                  "src": "400:20:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -550,10 +550,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 162,
+                    "id": 139,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "400:7:3",
+                    "src": "400:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -564,16 +564,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "399:22:3"
+              "src": "399:22:2"
             },
             "returnParameters": {
-              "id": 165,
+              "id": 142,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "430:0:3"
+              "src": "430:0:2"
             },
-            "scope": 179,
-            "src": "375:56:3",
+            "scope": 156,
+            "src": "375:56:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -581,23 +581,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 171,
+            "id": 148,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "discardCToken",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 169,
+              "id": 146,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 168,
+                  "id": 145,
                   "name": "tokenAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 171,
-                  "src": "460:20:3",
+                  "scope": 148,
+                  "src": "460:20:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -605,10 +605,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 167,
+                    "id": 144,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "460:7:3",
+                    "src": "460:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -619,16 +619,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "459:22:3"
+              "src": "459:22:2"
             },
             "returnParameters": {
-              "id": 170,
+              "id": 147,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "490:0:3"
+              "src": "490:0:2"
             },
-            "scope": 179,
-            "src": "437:54:3",
+            "scope": 156,
+            "src": "437:54:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -636,23 +636,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 178,
+            "id": 155,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isCToken",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 174,
+              "id": 151,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 173,
+                  "id": 150,
                   "name": "tokenAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 178,
-                  "src": "515:20:3",
+                  "scope": 155,
+                  "src": "515:20:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -660,10 +660,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 172,
+                    "id": 149,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "515:7:3",
+                    "src": "515:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -674,19 +674,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "514:22:3"
+              "src": "514:22:2"
             },
             "returnParameters": {
-              "id": 177,
+              "id": 154,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 176,
+                  "id": 153,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 178,
-                  "src": "560:4:3",
+                  "scope": 155,
+                  "src": "560:4:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -694,10 +694,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 175,
+                    "id": 152,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "560:4:3",
+                    "src": "560:4:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -707,20 +707,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "559:6:3"
+              "src": "559:6:2"
             },
-            "scope": 179,
-            "src": "497:69:3",
+            "scope": 156,
+            "src": "497:69:2",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 180,
-        "src": "86:482:3"
+        "scope": 157,
+        "src": "86:482:2"
       }
     ],
-    "src": "0:569:3"
+    "src": "0:569:2"
   },
   "compiler": {
     "name": "solc",
@@ -728,7 +728,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.20",
-  "updatedAt": "2020-01-10T20:56:54.856Z",
+  "updatedAt": "2020-01-15T11:16:27.418Z",
   "devdoc": {
     "author": "Sablier",
     "methods": {},
