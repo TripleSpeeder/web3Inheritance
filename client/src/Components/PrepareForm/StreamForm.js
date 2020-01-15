@@ -30,13 +30,13 @@ const tokenOptions = [
     },
 ]
 
-const StreamForm = ({web3}) => {
+const StreamForm = ({web3, createForm}) => {
     const secondsPerDay = 24*60*60
     const [token, setToken] = useState(tokenOptions[0].value)
     const [decimals, setDecimals] = useState(web3.utils.toBN(18))   // TODO: Remove default value
     const [amount, setAmount] = useState(web3.utils.toBN(0))
     const [recipient, setRecipient] = useState('')
-    const [durationSeconds, setDurationSeconds] = useState(0)
+    const [durationSeconds, setDurationSeconds] = useState(web3.utils.toBN(0))
     const [valid, setValid] = useState(false)
 
     // summary
@@ -86,6 +86,16 @@ const StreamForm = ({web3}) => {
         setEndTimestamp(timestamp)
     }
 
+    const onSubmit = () => {
+        // Provide stream data to createStream function for next steps
+        createForm({
+            /*token,*/
+            amount,
+            recipient,
+            duration: web3.utils.toBN(durationSeconds)
+        })
+    }
+
     return (
         <Form>
             <Form.Field>
@@ -119,17 +129,18 @@ const StreamForm = ({web3}) => {
             <Message>
                 <Message.Header>Summary</Message.Header>
                 <Message.List>
-                    <Message.Item>Stream will run until {dayjs.unix(endTimestamp).toString()}</Message.Item>
+                    <Message.Item>Stream will end approximately at {dayjs.unix(endTimestamp).toString()}</Message.Item>
                     <Message.Item>{recipient} will receive {dailyRate.rounded} per day</Message.Item>
                 </Message.List>
             </Message>
-            <Button type='submit' disabled={!valid}>Submit</Button>
+            <Button disabled={!valid} onClick={onSubmit}>Submit</Button>
         </Form>
     )
 }
 
 StreamForm.propTypes = {
     web3: PropTypes.object.isRequired,
+    createForm: PropTypes.func.isRequired,
 }
 
 export default StreamForm
