@@ -1,0 +1,27 @@
+{
+  "name": "web3inheritance",
+  "version": "1.0.0",
+  "description": "Inheritance web3 style",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TripleSpeeder/web3Inheritance.git"
+  },
+  "author": "Michael Bauer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TripleSpeeder/web3Inheritance/issues"
+  },
+  "homepage": "https://github.com/TripleSpeeder/web3Inheritance#readme",
+  "devDependencies": {
+    "@openzeppelin/contracts": "^2.4.0"
+  },
+  "dependencies": {
+    "@truffle/contract": "^4.1.4"
+  }
+}
