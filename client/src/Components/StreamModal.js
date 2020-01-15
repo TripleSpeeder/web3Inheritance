@@ -13,6 +13,7 @@ const StreamModal = ({web3}) => {
     const [sealedSablierContract, setSealedSablierContract] = useState()
     const [streamOptions, setStreamOptions] = useState({})
     const [phase, setPhase] = useState(0)
+    const [open, setOpen] = useState(false)
 
     useEffect(() => {
         const obtainAccount = async () => {
@@ -62,9 +63,22 @@ const StreamModal = ({web3}) => {
         setPhase(1)
     }
 
+    const handleClose = () => {
+        setOpen(false)
+        setPhase(0)
+    }
+
+    const handleOpen = () => {
+        setOpen(true)
+    }
+
     let content
     if (phase===0) {
-        content = <StreamForm web3={web3} createForm={onCreateStream}/>
+        content = <StreamForm
+            web3={web3}
+            createForm={onCreateStream}
+            cancel={handleClose}
+        />
     }else if(phase === 1) {
         content = <CreateFormContainer
             web3={web3}
@@ -74,12 +88,13 @@ const StreamModal = ({web3}) => {
             amount={streamOptions.amount}
             recipient={streamOptions.recipient}
             duration={streamOptions.duration}
+            cancel={handleClose}
         />
     }
     return (
         <Modal
-            trigger={<Button>Setup stream</Button>}
-            defaultOpen={true}
+            trigger={<Button onClick={handleOpen}>Setup stream</Button>}
+            open={open}
         >
             <Modal.Header>
                 Set up your heritage stream

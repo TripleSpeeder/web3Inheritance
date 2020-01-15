@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import PropTypes from 'prop-types'
-import {Button, Form, Input, Message} from 'semantic-ui-react'
+import {Button, Form, Input, Message, Segment} from 'semantic-ui-react'
 import TokenSelector from './TokenSelector'
 import AmountInputContainer from './AmountInputContainer'
 import AddressInputContainer from './AddressInputContainer'
@@ -30,7 +30,7 @@ const tokenOptions = [
     },
 ]
 
-const StreamForm = ({web3, createForm}) => {
+const StreamForm = ({web3, createForm, cancel}) => {
     const secondsPerDay = 24*60*60
     const [token, setToken] = useState(tokenOptions[0].value)
     const [decimals, setDecimals] = useState(web3.utils.toBN(18))   // TODO: Remove default value
@@ -133,7 +133,21 @@ const StreamForm = ({web3, createForm}) => {
                     <Message.Item>{recipient} will receive {dailyRate.rounded} per day</Message.Item>
                 </Message.List>
             </Message>
-            <Button disabled={!valid} onClick={onSubmit}>Submit</Button>
+            <Segment basic textAlign='center'>
+                <Button
+                    content='Create Stream'
+                    disabled={!valid}
+                    positive
+                    size={'big'}
+                    onClick={onSubmit}
+                />
+                <Button
+                    content='Cancel'
+                    negative
+                    size={'big'}
+                    onClick={cancel}
+                />
+            </Segment>
         </Form>
     )
 }
@@ -141,6 +155,7 @@ const StreamForm = ({web3, createForm}) => {
 StreamForm.propTypes = {
     web3: PropTypes.object.isRequired,
     createForm: PropTypes.func.isRequired,
+    cancel: PropTypes.func.isRequired,
 }
 
 export default StreamForm

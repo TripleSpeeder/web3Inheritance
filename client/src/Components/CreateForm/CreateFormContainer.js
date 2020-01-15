@@ -13,7 +13,7 @@ export const createFormStates = {
     CREATE_FORM_STATE_FINISHED: 50
 }
 
-const CreateFormContainer = ({web3, sender, tokenInstance, amount, sealedSablierInstance, recipient, duration}) => {
+const CreateFormContainer = ({web3, sender, tokenInstance, amount, sealedSablierInstance, recipient, duration, cancel}) => {
 
     // Constants to find & decode CreateStream event
     const topicHash = web3.utils.keccak256("CreateStream(uint256,address,address,uint256,address,uint256,uint256)")
@@ -173,16 +173,22 @@ const CreateFormContainer = ({web3, sender, tokenInstance, amount, sealedSablier
         }
     }, [formState])
 
-    const onRestartButton = () => {
+    const onRetry = () => {
+        // Set initial state to restart stream creation process
         setFormState(createFormStates.CREATE_FORM_STATE_CHECKING_BALANCE)
+    }
+
+    const onCancel = () => {
+        // close modal
     }
 
     return (
         <CreateForm
             formState={formState}
-            retry={onRestartButton}
+            retry={onRetry}
             streamId={streamId}
             error={error}
+            cancel={cancel}
         />
     )
 }
@@ -195,6 +201,7 @@ CreateFormContainer.propTypes = {
     sender: PropTypes.string.isRequired,
     recipient: PropTypes.string.isRequired,
     duration: PropTypes.object.isRequired,
+    cancel: PropTypes.func.isRequired,
 }
 
 export default CreateFormContainer
