@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import PropTypes from 'prop-types'
 import {Button, Form, Modal, Segment} from 'semantic-ui-react'
 import StreamForm from './PrepareForm/StreamForm'
-import CreateForm from './CreateForm/CreateForm'
+import CreateFormContainer from './CreateForm/CreateFormContainer'
 import contract from '@truffle/contract'
 import ERC20MockContractData from '../contracts/ERC20Mock'
 import SealedSablierContractData from '../contracts/SealedSablier'
@@ -66,7 +66,7 @@ const StreamModal = ({web3}) => {
     if (phase===0) {
         content = <StreamForm web3={web3} createForm={onCreateStream}/>
     }else if(phase === 1) {
-        content = <CreateForm
+        content = <CreateFormContainer
             web3={web3}
             tokenInstance={streamOptions.token}
             sender={account}
