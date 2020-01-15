@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@triplespeeder/bn2string": "^1.0.0",
+    "dayjs": "^1.8.19",
+    "prop-types": "^15.7.2",
     "react": "16.11.0",
     "react-dom": "16.11.0",
     "react-scripts": "3.2.0",
+    "semantic-ui-react": "^0.88.2",
     "web3": "1.2.2"
   },
   "scripts": {
