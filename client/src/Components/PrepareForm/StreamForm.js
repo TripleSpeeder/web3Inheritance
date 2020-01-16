@@ -13,24 +13,21 @@ const StreamForm = ({web3, createForm, cancel, availableTokens, account}) => {
     const secondsPerDay = 24*60*60
 
     const [token, setToken] = useState()
-    const [decimals, setDecimals] = useState(web3.utils.toBN(18))   // TODO: Remove default value
     const [amount, setAmount] = useState(web3.utils.toBN(0))
     const [recipient, setRecipient] = useState('')
     const [durationSeconds, setDurationSeconds] = useState(web3.utils.toBN(0))
     const [valid, setValid] = useState(false)
-
-    // summary
     const [endTimestamp, setEndTimestamp] = useState()
     const [dailyRate, setDailyRate] = useState({precise: '', rounded: '', amount:web3.utils.toBN(0)})
 
-    // calculate daily rate whenever amount or duration changes
+    // calculate daily rate when token, amount or duration changes
     useEffect(() => {
         const calcRate = () => {
             let amountPerSecond = amount.div(web3.utils.toBN(durationSeconds))
             let amountPerDay = amountPerSecond.mul(web3.utils.toBN(secondsPerDay))
             let {precise, rounded} = bnToDisplayString({
                 value: amountPerDay,
-                decimals: decimals,
+                decimals: token.decimals,
                 roundToDecimals: web3.utils.toBN(3)
             })
             setDailyRate({precise, rounded, amount: amountPerDay})
@@ -38,7 +35,7 @@ const StreamForm = ({web3, createForm, cancel, availableTokens, account}) => {
         if (amount.gt(0) && (durationSeconds>0)){
             calcRate()
         }
-    }, [amount, durationSeconds])
+    }, [amount, durationSeconds, token])
 
     // Simple form validation. Should be replaced with sth like react-formik later
     useEffect(() => {
@@ -81,6 +78,18 @@ const StreamForm = ({web3, createForm, cancel, availableTokens, account}) => {
         setToken(token)
     }
 
+    let summaryContent
+    if (valid) {
+        summaryContent = <Message.List>
+            <Message.Item>Stream will end approximately at {dayjs.unix(endTimestamp).toString()}</Message.Item>
+            <Message.Item>{recipient} will receive {dailyRate.rounded} {token.symbol} per day</Message.Item>
+        </Message.List>
+    } else {
+        summaryContent = <p>
+            Summary will update when all fields are filled.
+        </p>
+    }
+
     return (
         <Form size={'big'}>
             <Form.Field>
@@ -116,10 +125,7 @@ const StreamForm = ({web3, createForm, cancel, availableTokens, account}) => {
             </Form.Field>
             <Message>
                 <Message.Header>Summary</Message.Header>
-                <Message.List>
-                    <Message.Item>Stream will end approximately at {dayjs.unix(endTimestamp).toString()}</Message.Item>
-                    <Message.Item>{recipient} will receive {dailyRate.rounded} per day</Message.Item>
-                </Message.List>
+                {summaryContent}
             </Message>
             <Segment basic textAlign='center'>
                 <Button
