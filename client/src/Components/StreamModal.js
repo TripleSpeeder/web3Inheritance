@@ -6,6 +6,8 @@ import CreateFormContainer from './CreateForm/CreateFormContainer'
 import contract from '@truffle/contract'
 import ERC20MockContractData from '../contracts/ERC20Mock'
 import SealedSablierContractData from '../contracts/SealedSablier'
+import loadTokens from '../utils/contractLoader'
+
 
 const StreamModal = ({web3}) => {
     const [account, setAccount] = useState('')
@@ -14,13 +16,14 @@ const StreamModal = ({web3}) => {
     const [streamOptions, setStreamOptions] = useState({})
     const [phase, setPhase] = useState(0)
     const [open, setOpen] = useState(false)
+    const [availableTokens, setAvailableTokens] = useState({})
 
     useEffect(() => {
         const obtainAccount = async () => {
             const accounts = await web3.eth.getAccounts();
             setAccount(accounts[0])
             console.log("Got accounts")
-        }
+        }/*
         const obtainTokenInstance = async () => {
             // Get the contract instance.
             const ERC20Contract = contract(ERC20MockContractData)
@@ -29,34 +32,39 @@ const StreamModal = ({web3}) => {
             console.log("Got tokenContract")
             setTokenContract(instance)
         }
+        */
+        const obtainTokenInstances = async() => {
+            setAvailableTokens(await loadTokens(web3))
+        }
         const obtainSealedSablierInstance = async () => {
             // Get the contract instance.
             const SealedSablierContract = contract(SealedSablierContractData)
             SealedSablierContract.setProvider(web3.currentProvider)
-            const instance = await SealedSablierContract.deployed()
-            console.log("Got SealedSablier contract")
-            setSealedSablierContract(instance)
+            try {
+                const instance = await SealedSablierContract.deployed()
+                console.log("Got SealedSablier contract")
+                setSealedSablierContract(instance)
+            }catch(error){
+                console.log(error)
+            }
         }
-        console.log(`StreamModal web3 version: ${web3.version}`)
         obtainAccount()
-        obtainTokenInstance()
+        obtainTokenInstances()
         obtainSealedSablierInstance()
     }, [web3])
-
 
     if (account === '') {
         return <Segment>Waiting for web3 account...</Segment>
     }
-    if (!tokenContract) {
-        return <Segment>Waiting for token contract instance...</Segment>
+    if (!Object.keys(availableTokens).length) {
+        return <Segment>Waiting for token contract instances...</Segment>
     }
     if (!sealedSablierContract) {
-        return <Segment>Waiting for SealedSablier contract instance...</Segment>
+        // return <Segment>Waiting for SealedSablier contract instance...</Segment>
+        console.warn(`SealedSablier contract has not been deployed on current network`)
     }
 
     const onCreateStream = (streamOptions) => {
-        // TODO Use real token contract here
-        streamOptions.token = tokenContract
         console.log("Got streamOptions")
         console.log(streamOptions)
         setStreamOptions(streamOptions)
@@ -78,11 +86,12 @@ const StreamModal = ({web3}) => {
             web3={web3}
             createForm={onCreateStream}
             cancel={handleClose}
+            availableTokens={availableTokens}
         />
     }else if(phase === 1) {
         content = <CreateFormContainer
             web3={web3}
-            tokenInstance={streamOptions.token}
+            tokenInstance={streamOptions.token.contractInstance}
             sender={account}
             sealedSablierInstance={sealedSablierContract}
             amount={streamOptions.amount}

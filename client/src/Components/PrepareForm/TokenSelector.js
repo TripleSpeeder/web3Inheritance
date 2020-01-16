@@ -1,23 +1,51 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
-import {Select} from 'semantic-ui-react'
+import {Dropdown} from 'semantic-ui-react'
 
 
 TokenSelector.propTypes = {
-    tokenOptions: PropTypes.array.isRequired,
-    token: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
+    availableTokens: PropTypes.object.isRequired,
+    token: PropTypes.object,
+    selectToken: PropTypes.func.isRequired,
 }
 
-function TokenSelector({tokenOptions, token, onChange}) {
+function TokenSelector({availableTokens, token, selectToken}) {
+
+    const [tokenOptions, setTokenOptions] = useState([])
+    const [selectedToken, setSelectedToken] = useState()
+
+    useEffect(() => {
+        if (token) {
+            console.log("new token via props: " + token.name)
+            setSelectedToken(token)
+        } else {
+            console.log("Got empty token via props")
+        }
+    }, [token])
+
+    useEffect(() => {
+        setTokenOptions(Object.entries(availableTokens).map(entry => (
+            {
+                value: entry[0],  // contract address
+                key:  entry[0],  // contract address
+                text: entry[1].name,
+            }
+        )))
+    }, [availableTokens])
+
+
     function handleChange(ev, data) {
-        onChange(data.value)
+        const selectedTokenEntry = availableTokens[data.value]
+        console.log(selectedTokenEntry)
+        selectToken(selectedTokenEntry)
     }
+
     return (
-        <Select
+        <Dropdown
+            selection
             placeholder={"Select Token"}
             options={tokenOptions}
-            value={token}
+            value={selectedToken ? selectedToken.address : undefined}
             onChange={handleChange}
         />
     )

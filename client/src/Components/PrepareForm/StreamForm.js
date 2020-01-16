@@ -7,32 +7,12 @@ import AddressInputContainer from './AddressInputContainer'
 import bnToDisplayString from '@triplespeeder/bn2string'
 import dayjs from 'dayjs'
 
-const tokenOptions = [
-    {
-        key: 'DAI',
-        value: 'Dai Stablecoin',
-        text: 'Dai Stablecoin',
-    },
-    {
-        key: 'USDc',
-        text: 'USD Coin',
-        value: 'USD Coin',
-    },
-    {
-        key: 'cDAI',
-        text: 'Compound Dai',
-        value: 'Compound Dai',
-    },
-    {
-        key: 'cUSD',
-        text: 'Compound USD Coin',
-        value: 'Compound USD Coin',
-    },
-]
 
-const StreamForm = ({web3, createForm, cancel}) => {
+const StreamForm = ({web3, createForm, cancel, availableTokens}) => {
+
     const secondsPerDay = 24*60*60
-    const [token, setToken] = useState(tokenOptions[0].value)
+
+    const [token, setToken] = useState()
     const [decimals, setDecimals] = useState(web3.utils.toBN(18))   // TODO: Remove default value
     const [amount, setAmount] = useState(web3.utils.toBN(0))
     const [recipient, setRecipient] = useState('')
@@ -89,11 +69,16 @@ const StreamForm = ({web3, createForm, cancel}) => {
     const onSubmit = () => {
         // Provide stream data to createStream function for next steps
         createForm({
-            /*token,*/
+            token,
             amount,
             recipient,
             duration: web3.utils.toBN(durationSeconds)
         })
+    }
+
+    const onTokenSelectorChange = (token) => {
+        console.log(`Token selected: ${token}`)
+        setToken(token)
     }
 
     return (
@@ -101,9 +86,9 @@ const StreamForm = ({web3, createForm, cancel}) => {
             <Form.Field>
                 <label>What token do you want to use?</label>
                 <TokenSelector
-                    tokenOptions={tokenOptions}
+                    availableTokens={availableTokens}
                     token={token}
-                    onChange={setToken}
+                    selectToken={onTokenSelectorChange}
                 />
             </Form.Field>
             <Form.Field>
@@ -156,6 +141,7 @@ StreamForm.propTypes = {
     web3: PropTypes.object.isRequired,
     createForm: PropTypes.func.isRequired,
     cancel: PropTypes.func.isRequired,
+    availableTokens: PropTypes.object.isRequired,
 }
 
 export default StreamForm
