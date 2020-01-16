@@ -87,6 +87,7 @@ const StreamModal = ({web3}) => {
             createForm={onCreateStream}
             cancel={handleClose}
             availableTokens={availableTokens}
+            account={account}
         />
     }else if(phase === 1) {
         content = <CreateFormContainer

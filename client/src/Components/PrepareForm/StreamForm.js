@@ -8,7 +8,7 @@ import bnToDisplayString from '@triplespeeder/bn2string'
 import dayjs from 'dayjs'
 
 
-const StreamForm = ({web3, createForm, cancel, availableTokens}) => {
+const StreamForm = ({web3, createForm, cancel, availableTokens, account}) => {
 
     const secondsPerDay = 24*60*60
 
@@ -82,7 +82,7 @@ const StreamForm = ({web3, createForm, cancel, availableTokens}) => {
     }
 
     return (
-        <Form>
+        <Form size={'big'}>
             <Form.Field>
                 <label>What token do you want to use?</label>
                 <TokenSelector
@@ -91,10 +91,13 @@ const StreamForm = ({web3, createForm, cancel, availableTokens}) => {
                     selectToken={onTokenSelectorChange}
                 />
             </Form.Field>
-            <Form.Field>
-                <label>How much do you want to stream?</label>
-                <AmountInputContainer web3={web3} amount={amount} setAmount={setAmount} decimals={decimals}/>
-            </Form.Field>
+            <AmountInputContainer
+                web3={web3}
+                amount={amount}
+                setAmount={setAmount}
+                token={token}
+                account={account}
+            />
             <Form.Field>
                 <label>Who is the recipient?</label>
                 <AddressInputContainer setAddress={setRecipient} web3={web3}/>
@@ -142,6 +145,7 @@ StreamForm.propTypes = {
     createForm: PropTypes.func.isRequired,
     cancel: PropTypes.func.isRequired,
     availableTokens: PropTypes.object.isRequired,
+    account: PropTypes.string.isRequired,
 }
 
 export default StreamForm
