@@ -6,6 +6,7 @@ import AmountInputContainer from './AmountInputContainer'
 import AddressInputContainer from './AddressInputContainer'
 import bnToDisplayString from '@triplespeeder/bn2string'
 import dayjs from 'dayjs'
+import DurationInput from './DurationInput'
 
 
 const StreamForm = ({web3, createForm, cancel, availableTokens, account}) => {
@@ -32,7 +33,7 @@ const StreamForm = ({web3, createForm, cancel, availableTokens, account}) => {
             })
             setDailyRate({precise, rounded, amount: amountPerDay})
         }
-        if (amount.gt(0) && (durationSeconds>0)){
+        if (token && token.decimals && amount.gt(0) && (durationSeconds>0)){
             calcRate()
         }
     }, [amount, durationSeconds, token])
@@ -49,17 +50,10 @@ const StreamForm = ({web3, createForm, cancel, availableTokens, account}) => {
     }, [amount, recipient, durationSeconds, secondsPerDay])
 
     // Calculate new duration and endTimestamp
-    const onDaysChange = (ev) => {
-        const newDays = ev.target.value
-        let seconds = parseInt(newDays)*secondsPerDay
-        if (seconds.isNaN) {
-            console.log(`newDays is NAN`)
-            seconds=0
-        }
-        console.log(`Days changed to ${newDays} (${seconds} seconds)`)
-        let timestamp = dayjs().unix() + seconds
+    const onDurationChange = (duration) => {
+        let timestamp = dayjs().unix() + duration
         console.log(`New endTimestamp: ${timestamp}`)
-        setDurationSeconds(seconds)
+        setDurationSeconds(duration)
         setEndTimestamp(timestamp)
     }
 
@@ -92,37 +86,21 @@ const StreamForm = ({web3, createForm, cancel, availableTokens, account}) => {
 
     return (
         <Form size={'big'}>
-            <Form.Field>
-                <label>What token do you want to use?</label>
-                <TokenSelector
-                    availableTokens={availableTokens}
-                    token={token}
-                    selectToken={onTokenSelectorChange}
-                />
-            </Form.Field>
+            <TokenSelector
+                availableTokens={availableTokens}
+                token={token}
+                selectToken={onTokenSelectorChange}/>
             <AmountInputContainer
                 web3={web3}
                 amount={amount}
                 setAmount={setAmount}
                 token={token}
-                account={account}
-            />
-            <Form.Field>
-                <label>Who is the recipient?</label>
-                <AddressInputContainer setAddress={setRecipient} web3={web3}/>
-            </Form.Field>
-            <Form.Field>
-                <label>For how long should the money be streamed?</label>
-                <Input
-                    label={'days'}
-                    labelPosition={'right'}
-                    type={'number'}
-                    onChange={onDaysChange}
-                    min={1}
-                    max={3650}
-                    default={30}
-                />
-            </Form.Field>
+                account={account}/>
+            <AddressInputContainer
+                setAddress={setRecipient}
+                web3={web3}/>
+            <DurationInput
+                handleDuration={onDurationChange}/>
             <Message>
                 <Message.Header>Summary</Message.Header>
                 {summaryContent}

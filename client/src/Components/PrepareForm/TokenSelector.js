@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
-import {Dropdown} from 'semantic-ui-react'
+import {Dropdown, Form} from 'semantic-ui-react'
 
 
 TokenSelector.propTypes = {
@@ -41,13 +41,16 @@ function TokenSelector({availableTokens, token, selectToken}) {
     }
 
     return (
-        <Dropdown
-            selection
-            placeholder={"Select Token"}
-            options={tokenOptions}
-            value={selectedToken ? selectedToken.address : undefined}
-            onChange={handleChange}
-        />
+        <Form.Field>
+            <label>What token do you want to use?</label>
+            <Dropdown
+                selection
+                placeholder={"Select Token"}
+                options={tokenOptions}
+                value={selectedToken ? selectedToken.address : undefined}
+                onChange={handleChange}
+            />
+            </Form.Field>
     )
 }
 

@@ -11,14 +11,17 @@ const AddressInput = (props) => {
     }
 
     return (
-        <Form.Input
+        <Form.Field>
+            <label>Who is the recipient?</label>
+            <Form.Input
                     name='address'
                     placeholder='Address or ENS Name'
                     error={error}
                     loading={loading}
                     onChange={handleChange}
                     value={value}
-        />
+            />
+        </Form.Field>
     )
 }
 
