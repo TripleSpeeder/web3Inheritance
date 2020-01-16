@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import PropTypes from 'prop-types'
-import {Button, Form, Input, Message, Segment} from 'semantic-ui-react'
+import {Button, Form, Grid, Input, Message, Segment} from 'semantic-ui-react'
 import TokenSelector from './TokenSelector'
 import AmountInputContainer from './AmountInputContainer'
 import AddressInputContainer from './AddressInputContainer'
@@ -85,42 +85,56 @@ const StreamForm = ({web3, createForm, cancel, availableTokens, account}) => {
     }
 
     return (
-        <Form size={'big'}>
-            <TokenSelector
-                availableTokens={availableTokens}
-                token={token}
-                selectToken={onTokenSelectorChange}/>
-            <AmountInputContainer
-                web3={web3}
-                amount={amount}
-                setAmount={setAmount}
-                token={token}
-                account={account}/>
-            <AddressInputContainer
-                setAddress={setRecipient}
-                web3={web3}/>
-            <DurationInput
-                handleDuration={onDurationChange}/>
-            <Message>
-                <Message.Header>Summary</Message.Header>
-                {summaryContent}
-            </Message>
-            <Segment basic textAlign='center'>
-                <Button
-                    content='Create Stream'
-                    disabled={!valid}
-                    positive
-                    size={'big'}
-                    onClick={onSubmit}
-                />
-                <Button
-                    content='Cancel'
-                    negative
-                    size={'big'}
-                    onClick={cancel}
-                />
-            </Segment>
-        </Form>
+        <Grid columns={2} divided>
+            <Grid.Row>
+                <Grid.Column width={8}>
+                    <Form size={'big'}>
+                        <TokenSelector
+                            availableTokens={availableTokens}
+                            token={token}
+                            selectToken={onTokenSelectorChange}/>
+                        <AmountInputContainer
+                            web3={web3}
+                            amount={amount}
+                            setAmount={setAmount}
+                            token={token}
+                            account={account}/>
+                        <AddressInputContainer
+                            setAddress={setRecipient}
+                            web3={web3}/>
+                        <DurationInput
+                            handleDuration={onDurationChange}/>
+                    </Form>
+                </Grid.Column>
+                <Grid.Column width={8} verticalAlign={'middle'}>
+                    <Message size={'big'}>
+                        <Message.Header>Summary</Message.Header>
+                        {summaryContent}
+                    </Message>
+                </Grid.Column>
+            </Grid.Row>
+            <Grid.Row textAlign={'justified'}>
+                <Grid.Column width={4}>
+                    <Button
+                        fluid
+                        content='Create Stream'
+                        disabled={!valid}
+                        positive
+                        size={'big'}
+                        onClick={onSubmit}
+                    />
+                </Grid.Column>
+                <Grid.Column width={4}>
+                    <Button
+                        fluid
+                        content='Cancel'
+                        negative
+                        size={'big'}
+                        onClick={cancel}
+                    />
+                </Grid.Column>
+            </Grid.Row>
+        </Grid>
     )
 }
 

@@ -105,6 +105,7 @@ const StreamModal = ({web3}) => {
         <Modal
             trigger={<Button onClick={handleOpen}>Setup stream</Button>}
             open={open}
+            size={'large'}
         >
             <Modal.Header>
                 Set up your heritage stream
