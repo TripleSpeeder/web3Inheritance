@@ -96,6 +96,7 @@ const CreateFormContainer = ({web3, sender, tokenInstance, amount, sealedSablier
                 console.log("Error getting balance")
                 setError(`Error getting balance: ${error.code} - ${error.message}`)
                 setFormState(createFormStates.CREATE_FORM_STATE_ERROR)
+                return
             }
             if (balance.gte(amount)){
                 setFormState(createFormStates.CREATE_FORM_STATE_CHECKING_ALLOWANCE)
