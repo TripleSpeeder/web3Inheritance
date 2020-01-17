@@ -19,7 +19,7 @@ const AmountInputContainer = ({web3, setAmount, token, account}) => {
     })
     const [loadingBalance, setLoadingBalance] = useState(true)
     const [error, setError] = useState(false)
-    const [localAmount, setLocalAmount] = useState(0)
+    const [localAmount, setLocalAmount] = useState('0')
 
     // update available balance when token or account changes
     useEffect(() => {

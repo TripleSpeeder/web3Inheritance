@@ -7,8 +7,17 @@ Header.propTypes = {
 }
 
 function Header(props) {
+
     return (
-        <Menu fixed='top'>
+        <Container text>
+            <Header as='h1' inverted style={{marginTop: '3em'}}>
+                <Header.Content>Digital Heritage <em>powered by Sablier</em></Header.Content>
+            </Header>
+        </Container>
+    )
+
+    return (
+        <Menu fixed='top' inverted>
             <Container>
                 <Menu.Item as='a' header>
                     Digital Heritage powered by Sablier
