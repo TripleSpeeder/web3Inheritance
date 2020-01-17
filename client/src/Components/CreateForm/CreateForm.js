@@ -38,7 +38,16 @@ function CreateForm({formState, streamId, retry, cancel, error}) {
                 </Button.Group>
             </Message.Content>
         </Message>
-    } else {
+    } else if (formState === createFormStates.CREATE_FORM_STATE_WAITING_ALLOWANCE) {
+        message = <Message icon info size={'big'}>
+            <Icon name='info'/>
+            <Message.Content>
+                <Message.Header>Waiting for approval</Message.Header>
+                Please approve transaction
+            </Message.Content>
+        </Message>
+    }
+    else {
         message = <Message icon info size={'big'}>
             <Icon name='info'/>
             <Message.Content>
