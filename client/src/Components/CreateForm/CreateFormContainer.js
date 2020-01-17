@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import PropTypes from 'prop-types'
-import {Button} from 'semantic-ui-react'
 import dayjs from 'dayjs'
 import CreateForm from './CreateForm'
+import bnToDisplayString from '@triplespeeder/bn2string'
 
 export const createFormStates = {
-    CREATE_FORM_STATE_ERROR: 0,
     CREATE_FORM_STATE_CHECKING_BALANCE: 10,
     CREATE_FORM_STATE_CHECKING_ALLOWANCE: 20,
     CREATE_FORM_STATE_WAITING_ALLOWANCE: 30,
@@ -13,7 +12,7 @@ export const createFormStates = {
     CREATE_FORM_STATE_FINISHED: 50
 }
 
-const CreateFormContainer = ({web3, sender, tokenInstance, amount, sealedSablierInstance, recipient, duration, cancel}) => {
+const CreateFormContainer = ({web3, sender, token, amount, sealedSablierInstance, recipient, duration, cancel}) => {
 
     // Constants to find & decode CreateStream event
     const topicHash = web3.utils.keccak256("CreateStream(uint256,address,address,uint256,address,uint256,uint256)")
@@ -82,7 +81,6 @@ const CreateFormContainer = ({web3, sender, tokenInstance, amount, sealedSablier
         return amount.sub(remainder)
     }
 
-
     // simplified state machine to track creation process.
     // I'm sure there exists a hooks-based statemachine library somewhere I could use instead :)
     useEffect(() => {
@@ -91,28 +89,46 @@ const CreateFormContainer = ({web3, sender, tokenInstance, amount, sealedSablier
             setError('')
             let balance
             try {
-                balance = await tokenInstance.balanceOf(sender)
+                balance = await token.contractInstance.balanceOf(sender)
             } catch(error) {
                 console.log("Error getting balance")
                 setError(`Error getting balance: ${error.code} - ${error.message}`)
-                setFormState(createFormStates.CREATE_FORM_STATE_ERROR)
                 return
             }
             if (balance.gte(amount)){
                 setFormState(createFormStates.CREATE_FORM_STATE_CHECKING_ALLOWANCE)
             } else {
-                setError(`Not enough funds. Required: ${amount.toString()} Available: ${balance.toString()}`)
-                setFormState(createFormStates.CREATE_FORM_STATE_ERROR)
+                const amountDisplay = bnToDisplayString({
+                    value: amount,
+                    decimals: token.decimals,
+                    roundToDecimals: web3.utils.toBN(2)
+                })
+                const balanceDisplay = bnToDisplayString({
+                    value: balance,
+                    decimals: token.decimals,
+                    roundToDecimals: web3.utils.toBN(2)
+                })
+                setError(`Not enough funds. Required: ${amountDisplay.rounded} ${token.symbol}. Available: ${balanceDisplay.rounded} ${token.symbol}.`)
             }
         }
         const checkAllowance = async() => {
             console.log("checking allowance")
             setError('')
-            let allowance = await tokenInstance.allowance(sender, sealedSablierInstance.address)
+            let allowance = await token.contractInstance.allowance(sender, sealedSablierInstance.address)
             if (allowance.gte(amount)){
                 setFormState(createFormStates.CREATE_FORM_STATE_WAITING_STREAM)
             } else {
-                setError(`Not enough allowance. Required: ${amount.toString()} Available: ${allowance.toString()}`)
+                const amountDisplay = bnToDisplayString({
+                    value: amount,
+                    decimals: token.decimals,
+                    roundToDecimals: web3.utils.toBN(2)
+                })
+                const allowanceDisplay = bnToDisplayString({
+                    value: allowance,
+                    decimals: token.decimals,
+                    roundToDecimals: web3.utils.toBN(2)
+                })
+                setError(`Not enough allowance. Required: ${amountDisplay.rounded} ${token.symbol}. Available: ${allowanceDisplay.rounded} ${token.symbol}`)
                 setFormState(createFormStates.CREATE_FORM_STATE_WAITING_ALLOWANCE)
             }
         }
@@ -120,12 +136,11 @@ const CreateFormContainer = ({web3, sender, tokenInstance, amount, sealedSablier
             console.log(`Setting allowance of ${amount.toString()}`)
             setError('')
             try {
-                let result = await tokenInstance.approve(sealedSablierInstance.address, amount.toString(), {from: sender})
+                let result = await token.contractInstance.approve(sealedSablierInstance.address, amount.toString(), {from: sender})
                 setFormState(createFormStates.CREATE_FORM_STATE_WAITING_STREAM)
             } catch(error) {
                 console.log("Error while approving")
                 setError(`Error getting balance: ${error.code} - ${error.message}`)
-                setFormState(createFormStates.CREATE_FORM_STATE_ERROR)
             }
         }
         const createStream = async() => {
@@ -135,7 +150,7 @@ const CreateFormContainer = ({web3, sender, tokenInstance, amount, sealedSablier
             console.log(`Effective amount: ${finalAmount} (requested: ${amount})`)
             const timeStamps = calcTimeStamps()
             try {
-                let result = await sealedSablierInstance.createStream(recipient, finalAmount.toString(), tokenInstance.address, timeStamps.startTime.toString(), timeStamps.stopTime.toString(), {from: sender})
+                let result = await sealedSablierInstance.createStream(recipient, finalAmount.toString(), token.contractInstance.address, timeStamps.startTime.toString(), timeStamps.stopTime.toString(), {from: sender})
                 // Get CreateStream event to verify results. Since the event is not created by SealedSablier, but by the
                 // external "Sablier" contract, we have to manually look for it by topicHash in tx.rawLogs
                 let event = result.receipt.rawLogs.find(log => {
@@ -149,7 +164,6 @@ const CreateFormContainer = ({web3, sender, tokenInstance, amount, sealedSablier
             } catch(error){
                 console.log("Error while creating stream")
                 setError(`Error while creating stream: ${error.code} - ${error.message}`)
-                setFormState(createFormStates.CREATE_FORM_STATE_ERROR)
             }
         }
         console.log(`CreateForm web3 version: ${web3.version}`)
@@ -167,7 +181,6 @@ const CreateFormContainer = ({web3, sender, tokenInstance, amount, sealedSablier
                 createStream()
                 break
             case createFormStates.CREATE_FORM_STATE_FINISHED:
-            case createFormStates.CREATE_FORM_STATE_ERROR:
                 break
             default:
                 console.log(`Unhandled state ${formState}`)
@@ -196,7 +209,7 @@ const CreateFormContainer = ({web3, sender, tokenInstance, amount, sealedSablier
 
 CreateFormContainer.propTypes = {
     amount: PropTypes.object.isRequired,
-    tokenInstance: PropTypes.object.isRequired,
+    token: PropTypes.object.isRequired,
     web3: PropTypes.object.isRequired,
     sealedSablierInstance: PropTypes.object.isRequired,
     sender: PropTypes.string.isRequired,

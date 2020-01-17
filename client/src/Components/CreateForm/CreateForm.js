@@ -31,7 +31,7 @@ function CreateForm({formState, streamId, retry, cancel, error}) {
             <Message.Content>
                 <Message.Header>An error occured</Message.Header>
                 <p>{error}</p>
-                <Button.Group size={'big'}>
+                <Button.Group fluid size={'big'}>
                     <Button positive onClick={retry}>Retry</Button>
                     <Button.Or />
                     <Button negative onClick={cancel}>Cancel</Button>

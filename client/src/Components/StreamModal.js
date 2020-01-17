@@ -93,7 +93,7 @@ const StreamModal = ({web3, open, handleClose}) => {
     else if (phase === 1) {
         content = <CreateFormContainer
             web3={web3}
-            tokenInstance={streamOptions.token.contractInstance}
+            token={streamOptions.token}
             sender={account}
             sealedSablierInstance={sealedSablierContract}
             amount={streamOptions.amount}

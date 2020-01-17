@@ -61,8 +61,8 @@ export const finished = () => (
 export const error = () => (
     <CreateForm
         retry={action('retry')}
-        formState={createFormStates.CREATE_FORM_STATE_ERROR}
+        formState={createFormStates.CREATE_FORM_STATE_CHECKING_BALANCE}
         streamId={3521}
-        error={'This is the error message'}
+        error={'Not enough funds. Required: 123.00 cDAI. Available: 0.00 cDAI.'}
     />
 )
