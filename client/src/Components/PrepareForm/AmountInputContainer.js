@@ -18,8 +18,10 @@ const AmountInputContainer = ({web3, setAmount, token, account}) => {
         amount:web3.utils.toBN(0)
     })
     const [loadingBalance, setLoadingBalance] = useState(true)
+    const [error, setError] = useState(false)
+    const [localAmount, setLocalAmount] = useState(0)
 
-    // update balance when token contract changes
+    // update available balance when token or account changes
     useEffect(() => {
         const getBalance = async () => {
             setLoadingBalance(true)
@@ -37,12 +39,23 @@ const AmountInputContainer = ({web3, setAmount, token, account}) => {
         }
     }, [token, account])
 
+    // calculate token amount and notify parent on new value
+    useEffect(() => {
+        if (token) {
+            let amount = toBaseUnit(localAmount, token.decimals, web3.utils.BN)
+            console.log(`Converted ${localAmount} to ${amount.toString()}`)
+            setAmount(amount)
+        }
+    }, [token, localAmount])
+
     const onchange = (ev) => {
+        setError(false)
         let newValue = ev.target.value
         console.log(`New value from input: ${newValue}`)
-        let amount = toBaseUnit(newValue, token.decimals, web3.utils.BN)
-        console.log(`Converted ${newValue} to ${amount.toString()}`)
-        setAmount(amount)
+        if (newValue < 0) {
+            newValue = 0
+        }
+        setLocalAmount(newValue)
     }
 
     let balanceInfo
@@ -51,9 +64,9 @@ const AmountInputContainer = ({web3, setAmount, token, account}) => {
     }
 
     return (
-        <Form.Field>
+        <Form.Field error={error}>
             <label>How much do you want to stream? {balanceInfo}</label>
-            <Input type='number' onChange={onchange}></Input>
+            <Input type='number' onChange={onchange} value={localAmount}/>
         </Form.Field>
     )
 }

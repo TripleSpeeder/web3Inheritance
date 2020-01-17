@@ -75,8 +75,8 @@ const StreamForm = ({web3, createForm, cancel, availableTokens, account}) => {
     let summaryContent
     if (valid) {
         summaryContent = <Message.List>
-            <Message.Item>Stream will end approximately at {dayjs.unix(endTimestamp).toString()}</Message.Item>
-            <Message.Item>{recipient} will receive {dailyRate.rounded} {token.symbol} per day</Message.Item>
+            <Message.Item>Stream end: {dayjs.unix(endTimestamp).format('YYYY-MM-DD HH:mm')}</Message.Item>
+            <Message.Item>Daily rate: {dailyRate.rounded} {token.symbol}</Message.Item>
         </Message.List>
     } else {
         summaryContent = <p>
@@ -107,7 +107,7 @@ const StreamForm = ({web3, createForm, cancel, availableTokens, account}) => {
                     </Form>
                 </Grid.Column>
                 <Grid.Column width={8} verticalAlign={'middle'}>
-                    <Message size={'big'}>
+                    <Message info size={'big'}>
                         <Message.Header>Summary</Message.Header>
                         {summaryContent}
                     </Message>
