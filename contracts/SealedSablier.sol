@@ -66,6 +66,15 @@ contract SealedSablier {
             "failed to approve tokens from SealedSablier contract to Sablier"
         );
 
+        // "Escape hatch" - We need to prevent locking funds forever in case recipient cancels stream and funds
+        // end up in this contract:
+        // Approve sender to transfer tokens owned by contract. Setting approval to MAX_INT (~uint256(0)), as
+        // in worst case there might be multiple streams cancelled, so we don't know the total amount that might
+        // need rescue! Could instead use "increaseApproval" if it would be supported by all ERC20 contracts...
+        require(IERC20(tokenAddress).approve(msg.sender, ~uint256(0)),
+            "failed to approve tokens from SealedSablier contract to Creator"
+        );
+
         // create stream on Sablier contract and return the streamID
         streamId = IERC1620(Sablier).createStream(recipient, deposit, tokenAddress, startTime, stopTime);
     }

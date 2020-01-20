@@ -62,17 +62,18 @@ contract("SealeadSablier", function(accounts) {
   })
 
   it("...should create a stream of 100 tokens", async () => {
-    let tokens = web3.utils.toBN('100')
+    let BN = web3.utils.BN
+    let tokens = new BN('100')
 
     // calculate amount based on tokens and decimals
     let decimals = await erc20mock.decimals()
-    let multi = web3.utils.toBN(10).pow(decimals)
+    let multi = new BN(10).pow(decimals)
     let amount = tokens.mul(multi)
 
     // startTime: Now + 5 minutes
-    let startTime = web3.utils.toBN(Date.now() + (5*60))
+    let startTime = new BN(Date.now() + (5*60))
     // duration: 30 days
-    let timedelta = web3.utils.toBN(60*60*24*30)
+    let timedelta = new BN(60*60*24*30)
     let stopTime = startTime.add(timedelta)
 
     // Sablier requires amount to be multiple of timedelta. So round down amount if necessary.
@@ -104,5 +105,16 @@ contract("SealeadSablier", function(accounts) {
     assert.deepEqual(decoded.tokenAddress, erc20mock.address, "Wrong token address")
     assert.deepEqual(decoded.startTime, startTime.toString())
     assert.deepEqual(decoded.stopTime, stopTime.toString())
+
+    // SealedSablier contract should not have any balance after stream is created
+    let contractBalance = await erc20mock.balanceOf(sealedSablier.address)
+    assert(contractBalance.isZero())
+    // SealedSablier contract should not have any allowance left to spend sender funds after stream is created
+    let contractAllowance = await erc20mock.allowance(sender, sealedSablier.address)
+    assert(contractAllowance.isZero())
+    // Sender should have allowance to spend unlimited amount of tokens from SealedSablier ("Escape hatch")
+    let senderAllowance = await erc20mock.allowance(sealedSablier.address, sender)
+    let UINT_MAX = new BN(2).pow(new BN(256)).subn(1)
+    assert(senderAllowance.eq(UINT_MAX))
   });
 });
