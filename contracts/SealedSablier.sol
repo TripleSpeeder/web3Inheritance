@@ -6,11 +6,12 @@ import "./interfaces/IERC1620.sol";
 /**
     Workflow:
     1. User approves SealedSablier contract to spend desired amount of tokens
-    2. User calls SealedSablier doIt() function. This function does in one transaction:
+    2. User calls SealedSablier createStream() function. This function does in one transaction:
         a) transfer amount of tokens approved previously to itself
         b) approve Sablier contract to spend tokens that are now owned by SealedSablier contract
-        b) calls createStream() on Sablier contract. Sablier contract does:
-            a) create stream where SealedSablier contract is the sender (msg.sender from Sablier POV)
+        c) Also approve msg.sender to spend tokens (See below why this is necessary)
+        d) calls createStream() on Sablier contract. Sablier contract does:
+            a) create stream where SealedSablier contract is the sender
             b) transfer previously approved tokens from SealedSablier contract to Sablier
 
      Result:
@@ -23,10 +24,13 @@ import "./interfaces/IERC1620.sol";
          a stream
 
      Risk:
-       - Sablier streams can be cancelled both by sender or recipient. When a stream is cancelled, remaining funds
-         will be transferred back to the sender. In this scenario this means the funds will be sent back to the
-         SealedSablier contract, where they will be locked forever.
-         TODO: Think about possible fixes (maybe ERC20-approve original sender to transfer back canceled amounts?)
+       - Sablier streams can be cancelled both by sender or recipient. When a stream is cancelled,
+         remaining funds will be transferred back to the sender.
+         In this scenario the creator can not cancel the stream, but the receiver could still do it.
+         This means the funds will be sent back to the SealedSablier contract, where they will be
+         locked forever.
+         To enable the stream creator to salvage these returned funds I'm approving the sender to spend
+         any funds that end up in this contract - See "Escape hatch" notice below.
 */
 
 contract SealedSablier {
@@ -68,7 +72,7 @@ contract SealedSablier {
 
         // "Escape hatch" - We need to prevent locking funds forever in case recipient cancels stream and funds
         // end up in this contract:
-        // Approve sender to transfer tokens owned by contract. Setting approval to MAX_INT (~uint256(0)), as
+        // Approve sender to transfer tokens owned by contract. Setting approval to MAX_UINT (~uint256(0)), as
         // in worst case there might be multiple streams cancelled, so we don't know the total amount that might
         // need rescue! Could instead use "increaseApproval" if it would be supported by all ERC20 contracts...
         require(IERC20(tokenAddress).approve(msg.sender, ~uint256(0)),
