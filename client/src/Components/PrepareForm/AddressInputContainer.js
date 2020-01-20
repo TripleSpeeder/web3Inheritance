@@ -44,12 +44,10 @@ const AddressInputContainer = ({setAddress, web3}) => {
 
     const error = (addressInputState === addressInputStates.ADDRESS_INVALID)
     const loading = (addressInputState === addressInputStates.ADDRESS_RESOLVING)
-    const disabled = (error || loading)
     return (
         <AddressInput handleInput={setInput}
                       error = {error}
                       loading={loading}
-                      disabled={disabled}
                       value={input}
         />
     )
