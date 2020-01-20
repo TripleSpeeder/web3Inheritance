@@ -1378,15 +1378,33 @@
     "version": "0.5.11+commit.c082d0b4.Emscripten.clang"
   },
   "networks": {
-    "5777": {
+    "3": {
       "events": {},
       "links": {},
-      "address": "0x31Fb8AFf7245Cda970118ee3Ca452faC6D2014a9",
-      "transactionHash": "0x6cdc1fbc3e1544b4c5b47e8d8220b05c2d309064d8057e46562b8e7eb8a7f5bc"
+      "address": "0xd35a5391a00c4c0E141b59c00B22699c38790BBE",
+      "transactionHash": "0xc1723872f4b1d20556aa3c4a875dc3d471fa07537457e69fd1b9af453ab98a18"
+    },
+    "4": {
+      "events": {},
+      "links": {},
+      "address": "0xdc7D274Ad17dBd671a2C2d0f9Ee499A44d93145a",
+      "transactionHash": "0x1c8d15e6f4012e6abce7b36576d16fa30e0ebb0e7a92ed18fd594966e070566d"
+    },
+    "5": {
+      "events": {},
+      "links": {},
+      "address": "0xdc7D274Ad17dBd671a2C2d0f9Ee499A44d93145a",
+      "transactionHash": "0x1c8d15e6f4012e6abce7b36576d16fa30e0ebb0e7a92ed18fd594966e070566d"
+    },
+    "42": {
+      "events": {},
+      "links": {},
+      "address": "0xdc7D274Ad17dBd671a2C2d0f9Ee499A44d93145a",
+      "transactionHash": "0x1c8d15e6f4012e6abce7b36576d16fa30e0ebb0e7a92ed18fd594966e070566d"
     }
   },
   "schemaVersion": "3.0.20",
-  "updatedAt": "2020-01-15T11:27:01.104Z",
+  "updatedAt": "2020-01-20T12:54:39.417Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
