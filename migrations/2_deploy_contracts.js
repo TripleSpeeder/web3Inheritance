@@ -9,13 +9,7 @@ const SablierAdresses = {
   kovan: '0xc04Ad234E01327b24a831e3718DBFcbE245904CC',
   rinkeby: '0xc04Ad234E01327b24a831e3718DBFcbE245904CC',
   goerli: '0xc04Ad234E01327b24a831e3718DBFcbE245904CC',
-}
-
-const CTokenManagerAddresses = {
-  main: '0x342A6596F50b4Db7c3246C0F4eFb1f06843d7405',
-  kovan: '0xEE5dfDf2e98FdC572786b9E5649cB8Cc93D47a19',
-  rinkeby: '0xEE5dfDf2e98FdC572786b9E5649cB8Cc93D47a19',
-  goerli: '0xEE5dfDf2e98FdC572786b9E5649cB8Cc93D47a19',
+  ropsten: '0xc04Ad234E01327b24a831e3718DBFcbE245904CC'
 }
 
 /* global web3 */
@@ -40,8 +34,11 @@ module.exports = async function(deployer, network, accounts) {
     await deployer.deploy(ERC20Mock, 'mocktest', 'MTST', 18)
 
   } else {
-    SablierAddress = SablierAdresses[network]
-    console.log(`Using Sablier contract on ${network} at ${SablierAddress}`)
+    // handle -fork extension of network name for migration dry-run
+    let networkName = network.split('-')[0]
+
+    SablierAddress = SablierAdresses[networkName]
+    console.log(`Using Sablier contract on ${networkName} at ${SablierAddress}`)
   }
   await deployer.deploy(SealedSablier, SablierAddress)
 }
