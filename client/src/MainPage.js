@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import PropTypes from 'prop-types'
-import {Button, Container, Grid, Header, Icon, Menu, Segment} from 'semantic-ui-react'
+import {Button, Container, Grid, Header, Icon, List, Menu, Popup, Segment} from 'semantic-ui-react'
 import StreamModal from './Components/StreamModal'
 
 MainPage.propTypes = {
@@ -52,8 +52,8 @@ function MainPage({web3}) {
         <Segment inverted textAlign={'center'} vertical>
             <Menu fixed='top' inverted>
                 <Container>
-                    <Menu.Item as='a' header>
-                        Digital Heritage powered by Sablier
+                    <Menu.Item header>
+                        Digital Heritage powered by &nbsp;<a href={'https://sablier.finance'}>Sablier</a>
                     </Menu.Item>
                 </Container>
             </Menu>
@@ -82,7 +82,7 @@ function MainPage({web3}) {
                             minutes. No paperwork, no KYC. Secured by Sablier on the Ethereum Blockchain.
                         </p>
                     </Grid.Column>
-                    <Grid.Column floated='right' width={6}>
+                    <Grid.Column floated='right' width={7}>
                         <Header as='h3' style={{ fontSize: '2em' }}>
                             How does it work?
                         </Header>
@@ -95,20 +95,37 @@ function MainPage({web3}) {
                             with the stream. Once set up, there is no way for you to modify or cancel the
                             heritage stream - Your decision is final.
                         </p>
-                    </Grid.Column>
-                </Grid.Row>
-                <Grid.Row>
-                    <Grid.Column textAlign='center'>
-                        <Button size='huge'>Check Them Out</Button>
+                        <Header as='h3' style={{ fontSize: '2em' }}>
+                            More information
+                        </Header>
+                        <p style={{ fontSize: '1.33em' }}>
+                            For more information about Sablier streams check out the official site
+                            at <a href={'https://sablier.finance'}>sablier.finance</a>.
+                        </p>
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
+        </Segment>
+
+    const Footer =
+        <Segment basic>
+            <Container textAlign={'center'}>
+                <List horizontal size={'huge'}>
+                    <List.Item as={'a'} href={'https://github.com/TripleSpeeder/web3Inheritance'} target={'_blank'}>
+                        <Popup content='github.com/TripleSpeeder/web3Inheritance' trigger={<Icon name={'github'}/>}/>
+                    </List.Item>
+                    <List.Item as={'a'} href={'mailto:michael@m-bauer.org'}>
+                        <Popup content='michael@m-bauer.org' trigger={<Icon name={'mail outline'}/>}/>
+                    </List.Item>
+                </List>
+            </Container>
         </Segment>
 
     return (
         <React.Fragment>
             {TopMenu}
             {Explainer}
+            {Footer}
             {open && <StreamModal open={open} handleClose={handleClose} web3={web3}/>}
         </React.Fragment>
     )
