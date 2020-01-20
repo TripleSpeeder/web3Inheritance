@@ -22,6 +22,8 @@
     "@openzeppelin/contracts": "^2.4.0"
   },
   "dependencies": {
-    "@truffle/contract": "^4.1.4"
+    "@truffle/contract": "^4.1.4",
+    "@truffle/hdwallet-provider": "^1.0.29",
+    "dotenv": "^8.2.0"
   }
 }
