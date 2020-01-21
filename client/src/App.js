@@ -98,7 +98,10 @@ function App() {
 
           <Route path="/streams/:streamId">
             <Segment style={{padding: '8em 0em'}} vertical>
-              <StreamDetailsContainer ERC1620Instance={ERC1620ContractInstance}/>
+              <StreamDetailsContainer
+                  ERC1620Instance={ERC1620ContractInstance}
+                  web3={web3}
+              />
             </Segment>
           </Route>
 

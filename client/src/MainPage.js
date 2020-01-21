@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import PropTypes from 'prop-types'
 import {Button, Container, Grid, Header, Icon, List, Menu, Message, Popup, Segment} from 'semantic-ui-react'
 import StreamModal from './Components/StreamModal'
+import {Link} from 'react-router-dom'
 
 MainPage.propTypes = {
     web3: PropTypes.object.isRequired,
@@ -31,6 +32,7 @@ function MainPage({web3, sealedSablierContractInstance, ERC1620ContractInstance,
                 Receive Stream
                 <Icon name='right arrow' />
             </Button>
+            <Button as={Link} to={'/streams/23'} positive size={'big'}>View stream</Button>
         </React.Fragment>
     } else {
         Actions = <Message icon info size={'big'}>

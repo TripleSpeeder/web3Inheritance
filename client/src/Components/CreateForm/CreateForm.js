@@ -23,7 +23,7 @@ function CreateForm({formState, streamId, retry, cancel, closeModal, error}) {
                 <Message.Header>Complete</Message.Header>
                 <p>Your heritage stream is now created.</p>
                 <p>The streamID is <em>{streamId}.</em></p>
-                <Button positive size={'big'} onClick={closeModal}>Okay</Button>
+                <Button as={'Link'} to={'/streams/${streamId}'} positive size={'big'}>View stream</Button>
             </Message.Content>
         </Message>
     } else if (error) {
