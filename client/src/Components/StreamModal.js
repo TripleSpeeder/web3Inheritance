@@ -3,65 +3,14 @@ import PropTypes from 'prop-types'
 import {Button, Form, Icon, Message, Modal, Segment} from 'semantic-ui-react'
 import StreamForm from './PrepareForm/StreamForm'
 import CreateFormContainer from './CreateForm/CreateFormContainer'
-import contract from '@truffle/contract'
-import SealedSablierContractData from '../contracts/SealedSablier'
-import IERC1620ContractData from '../contracts/IERC1620'
-import loadTokens from '../utils/contractLoader'
 import RecipientForm from './RecipientForm/RecipientForm'
 
 
-const StreamModal = ({web3, open, handleClose, initialPhase}) => {
+const StreamModal = ({web3, open, handleClose, initialPhase, sealedSablierContractInstance, ERC1620ContractInstance, availableTokens}) => {
     const [account, setAccount] = useState('')
-    const [sealedSablierContractInstance, setSealedSablierContractInstance] = useState()
-    const [ERC1620ContractInstance, setERC1620ContractInstance] = useState()
     const [streamOptions, setStreamOptions] = useState({})
     const [phase, setPhase] = useState(initialPhase)
-    const [availableTokens, setAvailableTokens] = useState({})
-    const [loadingTokens, setLoadingTokens] = useState(true)
-    const [loadingSablier, setLoadingSablier] = useState(true)
     const [loadingAccount, setLoadingAccount] = useState(true)
-    const [loadingERC1620, setLoadingERC1620] = useState(true)
-
-    useEffect(() => {
-        const obtainTokenInstances = async() => {
-            setLoadingTokens(true)
-            setAvailableTokens(await loadTokens(web3))
-            setLoadingTokens(false)
-        }
-        const obtainSealedSablierInstance = async () => {
-            setLoadingSablier(true)
-            const SealedSablierContract = contract(SealedSablierContractData)
-            SealedSablierContract.setProvider(web3.currentProvider)
-            try {
-                setSealedSablierContractInstance(await SealedSablierContract.deployed())
-                console.log("Got SealedSablier contract")
-            }catch(error){
-                console.log(error)
-            }
-            setLoadingSablier(false)
-        }
-        obtainTokenInstances()
-        obtainSealedSablierInstance()
-    }, [web3])  // should actually depend on network(ID) instead of web3 obj
-
-    useEffect(() => {
-        const obtainERC1620 = async () => {
-            setLoadingERC1620(true)
-            const ERC1620Contract = contract(IERC1620ContractData)
-            ERC1620Contract.setProvider(web3.currentProvider)
-            try {
-                setERC1620ContractInstance(await ERC1620Contract.at(await sealedSablierContractInstance.Sablier()))
-                console.log("Got ERC1620 contract")
-            }catch(error){
-                console.log(error)
-            }
-            setLoadingERC1620(false)
-        }
-        if (sealedSablierContractInstance) {
-            obtainERC1620()
-        }
-    }, [sealedSablierContractInstance])
-
 
     useEffect(() => {
         const obtainAccount = async () => {
@@ -117,79 +66,44 @@ const StreamModal = ({web3, open, handleClose, initialPhase}) => {
     }
     // Got SealedSablier contract?
     else if (!sealedSablierContractInstance) {
-        if (loadingSablier) {
-            // still loading...
-            content = <Message info icon>
-                <Icon name={'spinner'} loading/>
-                <Message.Content>
-                    <Message.Header>Loading SealedSablier contract</Message.Header>
-                    Please wait while loading SealedSablier contract
-                </Message.Content>
-            </Message>
-        } else {
-            // loading failed :-(
-            content = <Message error icon>
-                <Icon name={'exclamation'}/>
-                <Message.Content>
-                    <Message.Header>Could not load SealedSablier contract</Message.Header>
-                    <p>
-                        Are you running on a local dev chain? Make sure to execute <em>truffle
-                        migrate</em> to deploy instances of Sablier and SealedSablier contracts.
-                    </p>
-                    <Button color={'black'} onClick={handleClose}>Okay</Button>
-                </Message.Content>
-            </Message>
-        }
+        content = <Message error icon>
+            <Icon name={'exclamation'}/>
+            <Message.Content>
+                <Message.Header>Could not load SealedSablier contract</Message.Header>
+                <p>
+                    Are you running on a local dev chain? Make sure to execute <em>truffle
+                    migrate</em> to deploy instances of Sablier and SealedSablier contracts.
+                </p>
+                <Button color={'black'} onClick={handleClose}>Okay</Button>
+            </Message.Content>
+        </Message>
     }
     // Got ERC1620 contract?
     else if (!ERC1620ContractInstance) {
-        if (loadingERC1620) {
-            // still loading...
-            content = <Message info icon>
-                <Icon name={'spinner'} loading/>
-                <Message.Content>
-                    <Message.Header>Loading Sablier contract</Message.Header>
-                    Please wait while loading ERC1620 Sablier contract
-                </Message.Content>
-            </Message>
-        } else {
-            // loading failed :-(
-            content = <Message error icon>
-                <Icon name={'exclamation'}/>
-                <Message.Content>
-                    <Message.Header>Could not load Sablier contract</Message.Header>
-                    <p>
-                        Are you running on a local dev chain? Make sure to execute <em>truffle
-                        migrate</em> to deploy Sablier ERC1620 contracts.
-                    </p>
-                    <Button color={'black'} onClick={handleClose}>Okay</Button>
-                </Message.Content>
-            </Message>
-        }
+        // loading failed :-(
+        content = <Message error icon>
+            <Icon name={'exclamation'}/>
+            <Message.Content>
+                <Message.Header>Could not load Sablier contract</Message.Header>
+                <p>
+                    Are you running on a local dev chain? Make sure to execute <em>truffle
+                    migrate</em> to deploy Sablier ERC1620 contracts.
+                </p>
+                <Button color={'black'} onClick={handleClose}>Okay</Button>
+            </Message.Content>
+        </Message>
     }
     // Got Token contract(s)?
     else if (!Object.keys(availableTokens).length) {
-        if (loadingTokens) {
-            // still loading...
-            content = <Message info icon>
-                <Icon name={'spinner'} loading/>
-                <Message.Content>
-                    <Message.Header>Loading token contracts</Message.Header>
-                    Please wait while loading token contracts
-                </Message.Content>
-            </Message>
-        } else {
-            // loading failed :-(
-            content = <Message error icon>
-                <Icon name={'exclamation'}/>
-                <Message.Content>
-                    <Message.Header>No token contracts available</Message.Header>
-                    <p>Are you running on a local dev chain? Make sure to execute <em>truffle
-                        migrate</em> to deploy an ERC20 Mock contract.</p>
-                    <Button color={'black'} onClick={handleClose}>Okay</Button>
-                </Message.Content>
-            </Message>
-        }
+        content = <Message error icon>
+            <Icon name={'exclamation'}/>
+            <Message.Content>
+                <Message.Header>No token contracts available</Message.Header>
+                <p>Are you running on a local dev chain? Make sure to execute <em>truffle
+                    migrate</em> to deploy an ERC20 Mock contract.</p>
+                <Button color={'black'} onClick={handleClose}>Okay</Button>
+            </Message.Content>
+        </Message>
     }
     else if (phase===1) {
         content = <StreamForm
@@ -242,6 +156,9 @@ StreamModal.propTypes = {
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
     initialPhase: PropTypes.number,
+    sealedSablierContractInstance: PropTypes.object,
+    ERC1620ContractInstance: PropTypes.object,
+    availableTokens: PropTypes.object,
 }
 
 

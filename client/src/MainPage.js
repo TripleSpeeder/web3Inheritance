@@ -1,67 +1,77 @@
 import React, {useState} from 'react'
 import PropTypes from 'prop-types'
-import {Button, Container, Grid, Header, Icon, List, Menu, Popup, Segment} from 'semantic-ui-react'
+import {Button, Container, Grid, Header, Icon, List, Menu, Message, Popup, Segment} from 'semantic-ui-react'
 import StreamModal from './Components/StreamModal'
 
 MainPage.propTypes = {
     web3: PropTypes.object.isRequired,
+    sealedSablierContractInstance: PropTypes.object,
+    ERC1620ContractInstance: PropTypes.object,
+    availableTokens: PropTypes.object,
 }
 
-function MainPage({web3}) {
+function MainPage({web3, sealedSablierContractInstance, ERC1620ContractInstance, availableTokens}) {
 
     const [open, setOpen] = useState(0)
+
+    const ready = (web3 && sealedSablierContractInstance && ERC1620ContractInstance && Object.keys(availableTokens).length)
 
     const handleClose = () => {
         setOpen(0)
     }
 
-    const HomepageHeading =
-        <Container
-            text
-            style={{marginBottom: '2em'}}
-        >
-            <Header
-                as='h1'
-                content='The web3 way of inheritance'
-                inverted
-                style={{
-                    fontSize: '4em',
-                    fontWeight: 'normal',
-                    /* marginBottom: 0,*/
-                    marginTop: '3em',
-                }}
-            />
-            <Header
-                as='h2'
-                content='secure. unstoppable. responsible.'
-                subheader='Pass your heritage via Sablier streams'
-                inverted
-                style={{
-                    fontSize: '1.7em',
-                    fontWeight: 'normal',
-                    marginTop: '1.5em',
-                }}
-            />
-            <Button primary size='huge' onClick={()=>{setOpen(1)}}>
+    let Actions
+    if (ready) {
+        Actions =<React.Fragment>
+            <Button primary size='massive' onClick={()=>{setOpen(1)}}>
                 Setup Stream
                 <Icon name='right arrow' />
             </Button>
-            <Button primary size='huge' onClick={()=>{setOpen(3)}}>
+            <Button primary size='massive' onClick={()=>{setOpen(3)}}>
                 Receive Stream
                 <Icon name='right arrow' />
             </Button>
-        </Container>
+        </React.Fragment>
+    } else {
+        Actions = <Message icon info size={'big'}>
+            <Icon loading name='spinner'/>
+            <Message.Content>
+                <Message.Header>Initializing backend</Message.Header>
+                Please wait while loading contracts
+            </Message.Content>
+        </Message>
+    }
 
-    const TopMenu =
+
+    const HomepageHeading =
         <Segment inverted textAlign={'center'} vertical>
-            <Menu fixed='top' inverted>
-                <Container>
-                    <Menu.Item header>
-                        Digital Heritage powered by &nbsp;<a href={'https://sablier.finance'}>Sablier</a>
-                    </Menu.Item>
-                </Container>
-            </Menu>
-            {HomepageHeading}
+            <Container
+                text
+                style={{marginBottom: '2em'}}
+            >
+                <Header
+                    as='h1'
+                    content='The web3 way of inheritance'
+                    inverted
+                    style={{
+                        fontSize: '4em',
+                        fontWeight: 'normal',
+                        marginTop: '3em',
+                    }}
+                />
+                <Header
+                    as='h2'
+                    content='secure. unstoppable. responsible.'
+                    subheader='Pass your heritage via Sablier streams'
+                    inverted
+                    style={{
+                        fontSize: '1.7em',
+                        fontWeight: 'normal',
+                        marginTop: '1.5em',
+                    }}
+                />
+                {Actions}
+            </Container>
         </Segment>
 
     const Explainer =
@@ -111,30 +121,18 @@ function MainPage({web3}) {
             </Grid>
         </Segment>
 
-    const Footer =
-        <Segment basic>
-            <Container textAlign={'center'}>
-                <List horizontal size={'huge'}>
-                    <List.Item as={'a'} href={'https://github.com/TripleSpeeder/web3Inheritance'} target={'_blank'}>
-                        <Popup content='github.com/TripleSpeeder/web3Inheritance' trigger={<Icon name={'github'}/>}/>
-                    </List.Item>
-                    <List.Item as={'a'} href={'mailto:michael@m-bauer.org'}>
-                        <Popup content='michael@m-bauer.org' trigger={<Icon name={'mail outline'}/>}/>
-                    </List.Item>
-                </List>
-            </Container>
-        </Segment>
-
     return (
         <React.Fragment>
-            {TopMenu}
+            {HomepageHeading}
             {Explainer}
-            {Footer}
             {open && <StreamModal
                 open={true}
                 handleClose={handleClose}
                 web3={web3}
-                initialPhase={open}
+                initialPhase={1}
+                sealedSablierContractInstance={sealedSablierContractInstance}
+                ERC1620ContractInstance={ERC1620ContractInstance}
+                availableTokens={availableTokens}
             />}
         </React.Fragment>
     )

@@ -24,6 +24,7 @@
   "dependencies": {
     "@truffle/contract": "^4.1.4",
     "@truffle/hdwallet-provider": "^1.0.29",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "react-router-dom": "^5.1.2"
   }
 }
