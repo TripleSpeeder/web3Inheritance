@@ -9,9 +9,10 @@ CreateForm.propTypes = {
     retry: PropTypes.func.isRequired,
     cancel: PropTypes.func.isRequired,
     error: PropTypes.string,
+    closeModal: PropTypes.func.isRequired,
 }
 
-function CreateForm({formState, streamId, retry, cancel, error}) {
+function CreateForm({formState, streamId, retry, cancel, closeModal, error}) {
 
     let message
     if (formState === createFormStates.CREATE_FORM_STATE_FINISHED) {
@@ -21,8 +22,8 @@ function CreateForm({formState, streamId, retry, cancel, error}) {
             <Message.Content>
                 <Message.Header>Complete</Message.Header>
                 <p>Your heritage stream is now created.</p>
-                <p>The recipient can access it at:</p>
-                <Button positive size={'big'} href={streamUrl}>{streamLabel}</Button>
+                <p>The streamID is <em>{streamId}.</em></p>
+                <Button positive size={'big'} onClick={closeModal}>Okay</Button>
             </Message.Content>
         </Message>
     } else if (error) {

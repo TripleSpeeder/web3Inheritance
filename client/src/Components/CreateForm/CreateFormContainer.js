@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import CreateForm from './CreateForm'
 import bnToDisplayString from '@triplespeeder/bn2string'
+import {topicHash, eventABI} from '../../utils/streamEventsABI'
 
 export const createFormStates = {
     CREATE_FORM_STATE_CHECKING_BALANCE: 10,
@@ -12,54 +13,7 @@ export const createFormStates = {
     CREATE_FORM_STATE_FINISHED: 50
 }
 
-const CreateFormContainer = ({web3, sender, token, amount, sealedSablierInstance, recipient, duration, cancel}) => {
-
-    // Constants to find & decode CreateStream event
-    const topicHash = web3.utils.keccak256("CreateStream(uint256,address,address,uint256,address,uint256,uint256)")
-    const eventABI = [
-        {
-            "indexed": true,
-            "internalType": "uint256",
-            "name": "streamId",
-            "type": "uint256"
-        },
-        {
-            "indexed": true,
-            "internalType": "address",
-            "name": "sender",
-            "type": "address"
-        },
-        {
-            "indexed": true,
-            "internalType": "address",
-            "name": "recipient",
-            "type": "address"
-        },
-        {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "deposit",
-            "type": "uint256"
-        },
-        {
-            "indexed": false,
-            "internalType": "address",
-            "name": "tokenAddress",
-            "type": "address"
-        },
-        {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "startTime",
-            "type": "uint256"
-        },
-        {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "stopTime",
-            "type": "uint256"
-        }
-    ]
+const CreateFormContainer = ({web3, sender, token, amount, sealedSablierInstance, recipient, duration, cancel, closeModal}) => {
 
     const [streamId, setStreamId] = useState(0)
     const [error, setError] = useState('')
@@ -192,10 +146,6 @@ const CreateFormContainer = ({web3, sender, token, amount, sealedSablierInstance
         setFormState(createFormStates.CREATE_FORM_STATE_CHECKING_BALANCE)
     }
 
-    const onCancel = () => {
-        // close modal
-    }
-
     return (
         <CreateForm
             formState={formState}
@@ -203,6 +153,7 @@ const CreateFormContainer = ({web3, sender, token, amount, sealedSablierInstance
             streamId={streamId}
             error={error}
             cancel={cancel}
+            closeModal={closeModal}
         />
     )
 }
@@ -216,6 +167,7 @@ CreateFormContainer.propTypes = {
     recipient: PropTypes.string.isRequired,
     duration: PropTypes.object.isRequired,
     cancel: PropTypes.func.isRequired,
+    closeModal: PropTypes.func.isRequired,
 }
 
 export default CreateFormContainer

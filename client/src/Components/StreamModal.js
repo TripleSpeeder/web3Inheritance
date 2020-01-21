@@ -5,18 +5,22 @@ import StreamForm from './PrepareForm/StreamForm'
 import CreateFormContainer from './CreateForm/CreateFormContainer'
 import contract from '@truffle/contract'
 import SealedSablierContractData from '../contracts/SealedSablier'
+import IERC1620ContractData from '../contracts/IERC1620'
 import loadTokens from '../utils/contractLoader'
+import RecipientForm from './RecipientForm/RecipientForm'
 
 
-const StreamModal = ({web3, open, handleClose}) => {
+const StreamModal = ({web3, open, handleClose, initialPhase}) => {
     const [account, setAccount] = useState('')
-    const [sealedSablierContract, setSealedSablierContract] = useState()
+    const [sealedSablierContractInstance, setSealedSablierContractInstance] = useState()
+    const [ERC1620ContractInstance, setERC1620ContractInstance] = useState()
     const [streamOptions, setStreamOptions] = useState({})
-    const [phase, setPhase] = useState(0)
+    const [phase, setPhase] = useState(initialPhase)
     const [availableTokens, setAvailableTokens] = useState({})
     const [loadingTokens, setLoadingTokens] = useState(true)
     const [loadingSablier, setLoadingSablier] = useState(true)
     const [loadingAccount, setLoadingAccount] = useState(true)
+    const [loadingERC1620, setLoadingERC1620] = useState(true)
 
     useEffect(() => {
         const obtainTokenInstances = async() => {
@@ -29,9 +33,8 @@ const StreamModal = ({web3, open, handleClose}) => {
             const SealedSablierContract = contract(SealedSablierContractData)
             SealedSablierContract.setProvider(web3.currentProvider)
             try {
-                const instance = await SealedSablierContract.deployed()
+                setSealedSablierContractInstance(await SealedSablierContract.deployed())
                 console.log("Got SealedSablier contract")
-                setSealedSablierContract(instance)
             }catch(error){
                 console.log(error)
             }
@@ -40,6 +43,25 @@ const StreamModal = ({web3, open, handleClose}) => {
         obtainTokenInstances()
         obtainSealedSablierInstance()
     }, [web3])  // should actually depend on network(ID) instead of web3 obj
+
+    useEffect(() => {
+        const obtainERC1620 = async () => {
+            setLoadingERC1620(true)
+            const ERC1620Contract = contract(IERC1620ContractData)
+            ERC1620Contract.setProvider(web3.currentProvider)
+            try {
+                setERC1620ContractInstance(await ERC1620Contract.at(await sealedSablierContractInstance.Sablier()))
+                console.log("Got ERC1620 contract")
+            }catch(error){
+                console.log(error)
+            }
+            setLoadingERC1620(false)
+        }
+        if (sealedSablierContractInstance) {
+            obtainERC1620()
+        }
+    }, [sealedSablierContractInstance])
+
 
     useEffect(() => {
         const obtainAccount = async () => {
@@ -65,7 +87,7 @@ const StreamModal = ({web3, open, handleClose}) => {
         console.log("Got streamOptions")
         console.log(streamOptions)
         setStreamOptions(streamOptions)
-        setPhase(1)
+        setPhase(2)
     }
 
     let content
@@ -94,7 +116,7 @@ const StreamModal = ({web3, open, handleClose}) => {
         }
     }
     // Got SealedSablier contract?
-    else if (!sealedSablierContract) {
+    else if (!sealedSablierContractInstance) {
         if (loadingSablier) {
             // still loading...
             content = <Message info icon>
@@ -111,14 +133,39 @@ const StreamModal = ({web3, open, handleClose}) => {
                 <Message.Content>
                     <Message.Header>Could not load SealedSablier contract</Message.Header>
                     <p>
-                    Are you running on a local dev chain? Make sure to execute <em>truffle
-                    migrate</em> to deploy instances of Sablier and SealedSablier contracts.
+                        Are you running on a local dev chain? Make sure to execute <em>truffle
+                        migrate</em> to deploy instances of Sablier and SealedSablier contracts.
                     </p>
                     <Button color={'black'} onClick={handleClose}>Okay</Button>
                 </Message.Content>
             </Message>
         }
-        console.warn(`SealedSablier contract has not been deployed on current network`)
+    }
+    // Got ERC1620 contract?
+    else if (!ERC1620ContractInstance) {
+        if (loadingERC1620) {
+            // still loading...
+            content = <Message info icon>
+                <Icon name={'spinner'} loading/>
+                <Message.Content>
+                    <Message.Header>Loading Sablier contract</Message.Header>
+                    Please wait while loading ERC1620 Sablier contract
+                </Message.Content>
+            </Message>
+        } else {
+            // loading failed :-(
+            content = <Message error icon>
+                <Icon name={'exclamation'}/>
+                <Message.Content>
+                    <Message.Header>Could not load Sablier contract</Message.Header>
+                    <p>
+                        Are you running on a local dev chain? Make sure to execute <em>truffle
+                        migrate</em> to deploy Sablier ERC1620 contracts.
+                    </p>
+                    <Button color={'black'} onClick={handleClose}>Okay</Button>
+                </Message.Content>
+            </Message>
+        }
     }
     // Got Token contract(s)?
     else if (!Object.keys(availableTokens).length) {
@@ -144,7 +191,7 @@ const StreamModal = ({web3, open, handleClose}) => {
             </Message>
         }
     }
-    else if (phase===0) {
+    else if (phase===1) {
         content = <StreamForm
             web3={web3}
             createForm={onCreateStream}
@@ -153,16 +200,25 @@ const StreamModal = ({web3, open, handleClose}) => {
             account={account}
         />
     }
-    else if (phase === 1) {
+    else if (phase === 2) {
         content = <CreateFormContainer
             web3={web3}
             token={streamOptions.token}
             sender={account}
-            sealedSablierInstance={sealedSablierContract}
+            sealedSablierInstance={sealedSablierContractInstance}
             amount={streamOptions.amount}
             recipient={streamOptions.recipient}
             duration={streamOptions.duration}
-            cancel={()=>{setPhase(0)}}
+            cancel={()=>{setPhase(1)}}
+            closeModal={handleClose}
+        />
+    }
+    else if (phase === 3) {
+        content = <RecipientForm
+            account={account}
+            web3={web3}
+            ERC1620Instance={ERC1620ContractInstance}
+            goBack={handleClose}
         />
     }
 
@@ -185,6 +241,7 @@ StreamModal.propTypes = {
     web3: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
+    initialPhase: PropTypes.number,
 }
 
 

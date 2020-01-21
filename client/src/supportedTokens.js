@@ -21,6 +21,10 @@ const supportedTokens = {
     // Ropsten
     '3': [
         {
+            name:'TestnetDAI',
+            address: '0x2D69aD895797C880abce92437788047BA0Eb7fF6'
+        },
+        {
             name: 'cDAI',
             address: '0x2b536482a01e620ee111747f8334b395a42a555e'
         },
@@ -31,6 +35,10 @@ const supportedTokens = {
     ],
     // kovan
     '42': [
+        {
+            name:'TestnetDAI',
+            address: '0x7d669a64deb8a4a51eea755bb0e19fd39ce25ae9'
+        },
         {
             name: 'DAI',
             address: '0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa',
@@ -47,6 +55,10 @@ const supportedTokens = {
     // goerli
     '5': [
         {
+            name:'TestnetDAI',
+            address: '0xF2D1F94310823FE26cFa9c9B6fD152834b8E7849'
+        },
+        {
             name:'cDAI',
             address: '0xd9fd9e875c9c1d567825e431dd6ed4f0e51aa8bf'
         },
@@ -57,6 +69,10 @@ const supportedTokens = {
     ],
     // rinkeby
     '4': [
+        {
+            name:'TestnetDAI',
+            address: '0xc3dbf84Abb494ce5199D5d4D815b10EC29529ff8'
+        },
         {
             name:'cDAI',
             address: '0x6d7f0754ffeb405d23c51ce938289d4835be3b14'

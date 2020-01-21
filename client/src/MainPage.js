@@ -9,10 +9,10 @@ MainPage.propTypes = {
 
 function MainPage({web3}) {
 
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(0)
 
     const handleClose = () => {
-        setOpen(false)
+        setOpen(0)
     }
 
     const HomepageHeading =
@@ -42,8 +42,12 @@ function MainPage({web3}) {
                     marginTop: '1.5em',
                 }}
             />
-            <Button primary size='huge' onClick={()=>{setOpen(true)}}>
+            <Button primary size='huge' onClick={()=>{setOpen(1)}}>
                 Setup Stream
+                <Icon name='right arrow' />
+            </Button>
+            <Button primary size='huge' onClick={()=>{setOpen(3)}}>
+                Receive Stream
                 <Icon name='right arrow' />
             </Button>
         </Container>
@@ -126,7 +130,12 @@ function MainPage({web3}) {
             {TopMenu}
             {Explainer}
             {Footer}
-            {open && <StreamModal open={open} handleClose={handleClose} web3={web3}/>}
+            {open && <StreamModal
+                open={true}
+                handleClose={handleClose}
+                web3={web3}
+                initialPhase={open}
+            />}
         </React.Fragment>
     )
 }

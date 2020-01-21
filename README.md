@@ -6,7 +6,7 @@ url:
 ## Overview
 Basic idea is to create a heritage stream...
 
-### Suppored tokens
+### Supported tokens
 describe where tokens are defined
 
 ### Contract addresses
