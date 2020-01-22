@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/web3Inheritance/static/css/main.1a8d6906.chunk.css",
-    "main.js": "/web3Inheritance/static/js/main.57ac9715.chunk.js",
-    "main.js.map": "/web3Inheritance/static/js/main.57ac9715.chunk.js.map",
+    "main.js": "/web3Inheritance/static/js/main.42451634.chunk.js",
+    "main.js.map": "/web3Inheritance/static/js/main.42451634.chunk.js.map",
     "runtime-main.js": "/web3Inheritance/static/js/runtime-main.e6aea782.js",
     "runtime-main.js.map": "/web3Inheritance/static/js/runtime-main.e6aea782.js.map",
     "static/js/2.6e3b3ecd.chunk.js": "/web3Inheritance/static/js/2.6e3b3ecd.chunk.js",
     "static/js/2.6e3b3ecd.chunk.js.map": "/web3Inheritance/static/js/2.6e3b3ecd.chunk.js.map",
     "index.html": "/web3Inheritance/index.html",
-    "precache-manifest.758e48298b4a9248cdf7b998d07bdf8a.js": "/web3Inheritance/precache-manifest.758e48298b4a9248cdf7b998d07bdf8a.js",
+    "precache-manifest.437c4030ee6f2d29b2203a1cf98af8b3.js": "/web3Inheritance/precache-manifest.437c4030ee6f2d29b2203a1cf98af8b3.js",
     "service-worker.js": "/web3Inheritance/service-worker.js",
     "static/css/main.1a8d6906.chunk.css.map": "/web3Inheritance/static/css/main.1a8d6906.chunk.css.map"
   },
@@ -16,6 +16,6 @@
     "static/js/runtime-main.e6aea782.js",
     "static/js/2.6e3b3ecd.chunk.js",
     "static/css/main.1a8d6906.chunk.css",
-    "static/js/main.57ac9715.chunk.js"
+    "static/js/main.42451634.chunk.js"
   ]
 }
