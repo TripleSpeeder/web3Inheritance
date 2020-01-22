@@ -8,8 +8,8 @@ const contract = require("@truffle/contract");
 const ERC20Data = require("../../contracts/ERC20Detailed")
 
 StreamDetailsContainer.propTypes = {
-    ERC1620Instance: PropTypes.object.isRequired,
-    web3: PropTypes.object.isRequired,
+    ERC1620Instance: PropTypes.object,
+    web3: PropTypes.object,
 }
 
 function StreamDetailsContainer({ERC1620Instance, web3}) {

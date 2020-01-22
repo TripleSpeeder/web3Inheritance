@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@triplespeeder/bn2string": "^1.0.0",
+    "bn.js": "^5.1.1",
     "dayjs": "^1.8.19",
     "prop-types": "^15.7.2",
     "react": "16.11.0",
