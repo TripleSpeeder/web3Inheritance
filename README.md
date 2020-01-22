@@ -3,6 +3,9 @@
 This is my entry to the Gitcoin ["Take back the web"](https://gitcoin.co/hackathon/take-back-the-web) hackathon.
 Bounty: https://gitcoin.co/issue/sablierhq/sablier/30/3874
 
+## Demo
+Demo site is hosted on github pages at https://triplespeeder.github.io/web3Inheritance/.
+
 ## Bounty description:
 From https://gitcoin.co/issue/sablierhq/sablier/30/3874:
 > Leaving inheritance is a complicated process and many parents would rather not shower their kids with riches, but they would neither fancy burning the money.
@@ -18,7 +21,7 @@ From https://gitcoin.co/issue/sablierhq/sablier/30/3874:
 ### Backend
 I deviated from the original description, as i did not feel comfortable with
 transfering substantial amounts of money to a temporary wallet. Instead i created
-a thin proxy contract `SealedSablier.sol` for creating streams. 
+a thin proxy contract [SealedSablier.sol](contracts/SealedSablier.sol) for creating streams. 
 #### Proxy contract workflow:
 1. User approves SealedSablier contract to spend desired amount of tokens
 1. User calls SealedSablier createStream() function. This function does in one transaction:
