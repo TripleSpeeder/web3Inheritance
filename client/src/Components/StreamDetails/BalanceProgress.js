@@ -25,11 +25,6 @@ function BalanceProgress({BN, deposit, remainingBalance, recipientBalance, token
         balancePercent = withDrawnAmount.muln(100).div(deposit)
     }
 
-    const remainingBalanceDisplay = bnToDisplayString({
-        value: remainingBalance,
-        decimals: token.decimals,
-        roundToDecimals: new BN(2)
-    })
     const lockedBalanceDisplay = bnToDisplayString({
         value: remainingBalance.sub(recipientBalance),
         decimals: token.decimals,
@@ -46,21 +41,6 @@ function BalanceProgress({BN, deposit, remainingBalance, recipientBalance, token
         <Progress size={'big'} percent={balancePercent.toNumber()} progress color={'blue'}>
             {description}
         </Progress>    )
-
-    /*
-    // calculate balance progress (How many funds are already *withdrawn* vs total deposit)
-    let withDrawnAmount = deposit.sub(remainingBalance)
-    let balancePercent
-    if (withDrawnAmount.isZero()) {
-        balancePercent = web3.utils.toBN(0)
-    } else if (withDrawnAmount.eq(deposit)) {
-        balancePercent = web3.utils.toBN(100)
-    } else {
-        balancePercent = withDrawnAmount.muln(100).div(deposit)
-    }
-    console.log(balancePercent)
-    console.log(`Deposit: ${deposit.toString()}, Withdrawn: ${withDrawnAmount.toString()} (${balancePercent.toString()}%)`)
-*/
 }
 
 export default BalanceProgress

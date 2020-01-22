@@ -17,8 +17,6 @@ function CreateForm({formState, streamId, retry, cancel, closeModal, error}) {
 
     let message
     if (formState === createFormStates.CREATE_FORM_STATE_FINISHED) {
-        let streamLabel = 'app.sablier.finance/stream/'+streamId
-        let streamUrl = 'https://'+streamLabel
         message = <Message success size={'big'}>
             <Message.Content>
                 <Message.Header>Complete</Message.Header>

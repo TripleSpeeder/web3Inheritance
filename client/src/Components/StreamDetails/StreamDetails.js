@@ -1,13 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {Button, Header, Icon, List, Message, Modal, Progress, Segment} from 'semantic-ui-react'
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
+import {Button, Icon, Message, Modal} from 'semantic-ui-react'
 import bnToDisplayString from '@triplespeeder/bn2string'
 import {Link} from 'react-router-dom'
 import StreamProgress from './StreamProgress'
 import BalanceProgress from './BalanceProgress'
-dayjs.extend(relativeTime)
 
 StreamDetails.propTypes = {
     loading: PropTypes.bool.isRequired,
@@ -40,7 +37,7 @@ function StreamDetails({loading, streamId, streamDetails, web3, withdraw, withdr
             </Message.Content>
         </Message>
     } else {
-        const {recipient, deposit, tokenAddress, startTime, stopTime, remainingBalance, ratePerSecond, recipientBalance} = streamDetails
+        const {deposit, startTime, stopTime, remainingBalance, recipientBalance} = streamDetails
 
         let withdrawButton
         if (withdrawing) {

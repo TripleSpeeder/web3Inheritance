@@ -90,7 +90,7 @@ const CreateFormContainer = ({web3, sender, token, amount, sealedSablierInstance
             console.log(`Setting allowance of ${amount.toString()}`)
             setError('')
             try {
-                let result = await token.contractInstance.approve(sealedSablierInstance.address, amount.toString(), {from: sender})
+                await token.contractInstance.approve(sealedSablierInstance.address, amount.toString(), {from: sender})
                 setFormState(createFormStates.CREATE_FORM_STATE_WAITING_STREAM)
             } catch(error) {
                 console.log("Error while approving")

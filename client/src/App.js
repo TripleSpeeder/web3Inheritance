@@ -79,7 +79,7 @@ function App() {
     if (sealedSablierContractInstance) {
       obtainERC1620()
     }
-  }, [sealedSablierContractInstance])
+  }, [sealedSablierContractInstance, web3])
 
   return (
       <Router>

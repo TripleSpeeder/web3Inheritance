@@ -1,11 +1,10 @@
 import React, {useState} from 'react'
 import PropTypes from 'prop-types'
-import {Button, Container, Grid, Header, Icon, List, Menu, Message, Popup, Segment} from 'semantic-ui-react'
+import {Button, Container, Grid, Header, Icon, Message, Segment} from 'semantic-ui-react'
 import StreamModal from './Components/StreamModal'
-import {Link} from 'react-router-dom'
 
 MainPage.propTypes = {
-    web3: PropTypes.object.isRequired,
+    web3: PropTypes.object,
     sealedSablierContractInstance: PropTypes.object,
     ERC1620ContractInstance: PropTypes.object,
     availableTokens: PropTypes.object,
@@ -25,14 +24,13 @@ function MainPage({web3, sealedSablierContractInstance, ERC1620ContractInstance,
     if (ready) {
         Actions =<React.Fragment>
             <Button primary size='massive' onClick={()=>{setOpen(1)}}>
-                Setup Stream
+                Create new stream
                 <Icon name='right arrow' />
             </Button>
             <Button primary size='massive' onClick={()=>{setOpen(3)}}>
-                Receive Stream
+                Show incoming streams
                 <Icon name='right arrow' />
             </Button>
-            <Button as={Link} to={'/streams/23'} positive size={'big'}>View stream</Button>
         </React.Fragment>
     } else {
         Actions = <Message icon info size={'big'}>
@@ -43,7 +41,6 @@ function MainPage({web3, sealedSablierContractInstance, ERC1620ContractInstance,
             </Message.Content>
         </Message>
     }
-
 
     const HomepageHeading =
         <Segment inverted textAlign={'center'} vertical>
@@ -131,7 +128,7 @@ function MainPage({web3, sealedSablierContractInstance, ERC1620ContractInstance,
                 open={true}
                 handleClose={handleClose}
                 web3={web3}
-                initialPhase={1}
+                initialPhase={open}
                 sealedSablierContractInstance={sealedSablierContractInstance}
                 ERC1620ContractInstance={ERC1620ContractInstance}
                 availableTokens={availableTokens}

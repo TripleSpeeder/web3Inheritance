@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import PropTypes from 'prop-types'
-import {Button, Form, Icon, Message, Modal, Segment} from 'semantic-ui-react'
+import {Button, Icon, Message, Modal} from 'semantic-ui-react'
 import StreamForm from './PrepareForm/StreamForm'
 import CreateFormContainer from './CreateForm/CreateFormContainer'
 import RecipientForm from './RecipientForm/RecipientForm'

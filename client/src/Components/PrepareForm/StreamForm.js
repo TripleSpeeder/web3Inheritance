@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import PropTypes from 'prop-types'
-import {Button, Form, Grid, Input, Message, Segment} from 'semantic-ui-react'
+import {Button, Form, Grid, Message} from 'semantic-ui-react'
 import TokenSelector from './TokenSelector'
 import AmountInputContainer from './AmountInputContainer'
 import AddressInputContainer from './AddressInputContainer'
@@ -16,7 +16,7 @@ const StreamForm = ({web3, createForm, cancel, availableTokens, account}) => {
     const [token, setToken] = useState()
     const [amount, setAmount] = useState(web3.utils.toBN(0))
     const [recipient, setRecipient] = useState('')
-    const [durationSeconds, setDurationSeconds] = useState(web3.utils.toBN(0))
+    const [durationSeconds, setDurationSeconds] = useState(0)
     const [valid, setValid] = useState(false)
     const [endTimestamp, setEndTimestamp] = useState()
     const [dailyRate, setDailyRate] = useState({precise: '', rounded: '', amount:web3.utils.toBN(0)})
@@ -33,10 +33,10 @@ const StreamForm = ({web3, createForm, cancel, availableTokens, account}) => {
             })
             setDailyRate({precise, rounded, amount: amountPerDay})
         }
-        if (token && token.decimals && amount.gt(0) && (durationSeconds>0)){
+        if (token && token.decimals && amount.gt(0) && (durationSeconds)){
             calcRate()
         }
-    }, [amount, durationSeconds, token])
+    }, [amount, durationSeconds, token, web3, secondsPerDay])
 
     // Simple form validation. Should be replaced with sth like react-formik later
     useEffect(() => {

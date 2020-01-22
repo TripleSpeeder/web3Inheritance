@@ -23,7 +23,7 @@ const loadTokens = async (web3) =>
     let contracts = {}
     let networkId = await web3.eth.net.getId()
     let tokens = supportedTokens[networkId]
-    if (!tokens || tokens.length == 0) {
+    if (!tokens || tokens.length === 0) {
         console.log(`No token contracts defined for network ${networkId}`)
         console.log(`Trying to load ERC20Mock`)
         let erc20MockContract = contract(ERC20MockData)

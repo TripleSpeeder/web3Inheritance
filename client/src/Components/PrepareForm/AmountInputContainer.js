@@ -37,7 +37,7 @@ const AmountInputContainer = ({web3, setAmount, token, account}) => {
         if (token && account) {
             getBalance()
         }
-    }, [token, account])
+    }, [token, account, web3])
 
     // calculate token amount and notify parent on new value
     useEffect(() => {
@@ -46,7 +46,7 @@ const AmountInputContainer = ({web3, setAmount, token, account}) => {
             console.log(`Converted ${localAmount} to ${amount.toString()}`)
             setAmount(amount)
         }
-    }, [token, localAmount])
+    }, [token, localAmount, setAmount, web3])
 
     const onchange = (ev) => {
         setError(false)
