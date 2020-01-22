@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {Button, Grid, Icon, Message, Segment, Step} from 'semantic-ui-react'
 import {createFormStates} from './CreateFormContainer'
+import {Link} from 'react-router-dom'
 
 CreateForm.propTypes = {
     formState: PropTypes.number.isRequired,
@@ -23,7 +24,7 @@ function CreateForm({formState, streamId, retry, cancel, closeModal, error}) {
                 <Message.Header>Complete</Message.Header>
                 <p>Your heritage stream is now created.</p>
                 <p>The streamID is <em>{streamId}.</em></p>
-                <Button as={'Link'} to={'/streams/${streamId}'} positive size={'big'}>View stream</Button>
+                <Button as={Link} to={`/streams/${streamId}`} positive size={'big'}>View stream</Button>
             </Message.Content>
         </Message>
     } else if (error) {
