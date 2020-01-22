@@ -2,6 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://triplespeeder.github.io/web3Inheritance",
   "dependencies": {
     "@triplespeeder/bn2string": "^1.0.0",
     "bn.js": "^5.1.1",
