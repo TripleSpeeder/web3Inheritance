@@ -18,7 +18,7 @@ const instantiateContract = async (address, provider) => {
     }
 }
 
-const loadTokens = async (web3) =>
+module.exports = async (web3) =>
 {
     let contracts = {}
     let networkId = await web3.eth.net.getId()
@@ -55,4 +55,3 @@ const loadTokens = async (web3) =>
     return(contracts)
 }
 
-module.exports = loadTokens

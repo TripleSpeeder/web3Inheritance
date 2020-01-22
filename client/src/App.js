@@ -8,7 +8,7 @@ import StreamDetailsContainer from './Components/StreamDetails/StreamDetailsCont
 import contract from '@truffle/contract'
 import SealedSablierContractData from './contracts/SealedSablier'
 import IERC1620ContractData from './contracts/IERC1620'
-import loadTokens from './utils/contractLoader'
+const loadTokens = require('./utils/contractLoader')
 
 function App() {
   const [web3, setWeb3] = useState()
