@@ -16,9 +16,9 @@ function App() {
   const [ERC1620ContractInstance, setERC1620ContractInstance] = useState()
   const [availableTokens, setAvailableTokens] = useState({})
   const [loadingWeb3, setLoadingWeb3] = useState(true)
-  const [loadingTokens, setLoadingTokens] = useState(true)
-  const [loadingSablier, setLoadingSablier] = useState(true)
-  const [loadingERC1620, setLoadingERC1620] = useState(true)
+  const [loadingTokens, setLoadingTokens] = useState(false)
+  const [loadingSablier, setLoadingSablier] = useState(false)
+  const [loadingERC1620, setLoadingERC1620] = useState(false)
 
   useEffect(() => {
     const run = async () => {
@@ -81,6 +81,8 @@ function App() {
     }
   }, [sealedSablierContractInstance, web3])
 
+  const loading = (loadingWeb3 || loadingTokens || loadingSablier || loadingERC1620)
+
   return (
       <Router>
 
@@ -105,16 +107,13 @@ function App() {
             </Segment>
           </Route>
 
-          <Route path="/incoming">
-            <p>List incoming streams for current account here...</p>
-          </Route>
-
           <Route path="/">
             <MainPage
                 web3={web3}
                 sealedSablierContractInstance={sealedSablierContractInstance}
                 ERC1620ContractInstance={ERC1620ContractInstance}
                 availableTokens={availableTokens}
+                loading={loading}
             />
           </Route>
 

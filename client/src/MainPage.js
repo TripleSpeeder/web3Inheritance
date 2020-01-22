@@ -8,13 +8,19 @@ MainPage.propTypes = {
     sealedSablierContractInstance: PropTypes.object,
     ERC1620ContractInstance: PropTypes.object,
     availableTokens: PropTypes.object,
+    loading: PropTypes.bool.isRequired,
 }
 
-function MainPage({web3, sealedSablierContractInstance, ERC1620ContractInstance, availableTokens}) {
+function MainPage({web3, sealedSablierContractInstance, ERC1620ContractInstance, availableTokens, loading}) {
 
     const [open, setOpen] = useState(0)
 
     const ready = (web3 && sealedSablierContractInstance && ERC1620ContractInstance && Object.keys(availableTokens).length)
+
+    if ((!loading) && (!ready)) {
+        console.log("Something went wrong while loading contracts")
+        alert("Please use local dev environment, Ropsten, Rinkeby, Goerli or Kovan. MainNet is not supported.")
+    }
 
     const handleClose = () => {
         setOpen(0)
