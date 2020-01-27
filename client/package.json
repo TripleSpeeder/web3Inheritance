@@ -13,6 +13,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "semantic-ui-react": "^0.88.2",
+    "solc": "^0.5.11",
     "web3": "1.2.2"
   },
   "scripts": {

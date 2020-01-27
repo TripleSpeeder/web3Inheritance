@@ -90,7 +90,7 @@ function App() {
           <Menu fixed='top' inverted>
             <Container>
               <Menu.Item header>
-                Digital Heritage powered by &nbsp;<a href={'https://sablier.finance'}>Sablier</a>
+                Digital Heritage powered by &nbsp;<a href={'https://sablier.finance'} target={'_blank'}>Sablier</a>
               </Menu.Item>
             </Container>
           </Menu>

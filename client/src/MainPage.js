@@ -118,8 +118,8 @@ function MainPage({web3, sealedSablierContractInstance, ERC1620ContractInstance,
                             More information
                         </Header>
                         <p style={{ fontSize: '1.33em' }}>
-                            For more information about Sablier streams check out the official site
-                            at <a href={'https://sablier.finance'}>sablier.finance</a>.
+                            For more information about Sablier streams check out the official FAQ page
+                            at <a href={'https://faq.sablier.finance'} target={'_blank'}>faq.sablier.finance</a>.
                         </p>
                     </Grid.Column>
                 </Grid.Row>

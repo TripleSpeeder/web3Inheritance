@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useCallback, useState, useEffect} from 'react'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import CreateForm from './CreateForm'
@@ -20,20 +20,20 @@ const CreateFormContainer = ({web3, sender, token, amount, sealedSablierInstance
     const [formState, setFormState] = useState(createFormStates.CREATE_FORM_STATE_CHECKING_BALANCE)
 
     // Transform duration to startTime and stopTime
-    const calcTimeStamps = () => {
+    const calcTimeStamps = useCallback(() => {
         // add 5 minutes offset to startTime to make sure stream is fully created before startTime reached
         let startTime = web3.utils.toBN(dayjs().unix() + (5*60))
         return {
             startTime,
             stopTime: startTime.add(duration)
         }
-    }
+    }, [duration, web3.utils]);
 
     // Sablier requires amount to be multiple of duration. Decrease effective amount accordingly
-    const calcFinalAmount = () => {
+    const calcFinalAmount = useCallback(() => {
         let remainder = amount.mod(duration)
         return amount.sub(remainder)
-    }
+    }, [amount, duration]);
 
     // simplified state machine to track creation process.
     // I'm sure there exists a hooks-based statemachine library somewhere I could use instead :)
@@ -139,7 +139,21 @@ const CreateFormContainer = ({web3, sender, token, amount, sealedSablierInstance
             default:
                 console.log(`Unhandled state ${formState}`)
         }
-    }, [formState])
+    }, [
+        amount,
+        calcFinalAmount,
+        calcTimeStamps,
+        formState,
+        recipient,
+        sealedSablierInstance,
+        sender,
+        token.contractInstance,
+        token.decimals,
+        token.symbol,
+        web3.eth.abi,
+        web3.utils,
+        web3.version
+    ])
 
     const onRetry = () => {
         // Set initial state to restart stream creation process

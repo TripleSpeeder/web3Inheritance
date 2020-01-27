@@ -46,7 +46,7 @@ function StreamDetails({loading, streamId, streamDetails, web3, withdraw, withdr
                 Withdrawal confirming...
             </Button>
         } else {
-            let {precise, rounded} = bnToDisplayString({
+            let {rounded} = bnToDisplayString({
                 value: recipientBalance,
                 decimals: token.decimals,
                 roundToDecimals: web3.utils.toBN(2)
