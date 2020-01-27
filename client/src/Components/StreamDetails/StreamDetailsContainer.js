@@ -91,7 +91,7 @@ function StreamDetailsContainer({ERC1620Instance, web3}) {
         setStreamDetails({
             recipient: nextStreamDetails.recipient,
             deposit: nextStreamDetails.deposit,
-            tokenAddress: nextStreamDetails.tokanAddress,
+            tokenAddress: nextStreamDetails.tokenAddress,
             startTime: nextStreamDetails.startTime,
             stopTime: nextStreamDetails.stopTime,
             remainingBalance: nextStreamDetails.remainingBalance,
