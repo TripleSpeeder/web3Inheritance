@@ -6,12 +6,11 @@ import {Link} from 'react-router-dom'
 
 RecipientForm.propTypes = {
     account: PropTypes.string.isRequired,
-    web3: PropTypes.object.isRequired,
-    ERC1620Instance: PropTypes.object.isRequired,
+    sealedSablierInstance: PropTypes.object.isRequired,
     goBack: PropTypes.func.isRequired,
 }
 
-function RecipientForm({web3, account, ERC1620Instance, goBack}) {
+function RecipientForm({account, sealedSablierInstance, goBack}) {
 
     const [loadingEvents, setLoadingEvents] = useState(true)
     const [myStreams, setMyStreams] = useState([])
@@ -19,7 +18,7 @@ function RecipientForm({web3, account, ERC1620Instance, goBack}) {
     useEffect(() => {
         const loadEvents = async () => {
             setLoadingEvents(true)
-            let createEvents = await ERC1620Instance.getPastEvents('CreateStream', {
+            let createEvents = await sealedSablierInstance.getPastEvents('CreateSealedStream', {
                 fromBlock: 1,
                 filter: {
                     recipient: account
@@ -41,7 +40,7 @@ function RecipientForm({web3, account, ERC1620Instance, goBack}) {
             setLoadingEvents(false)
         }
         loadEvents()
-    }, [ERC1620Instance, account])
+    }, [sealedSablierInstance, account])
 
     let content
     if (loadingEvents) {

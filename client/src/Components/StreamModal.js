@@ -131,7 +131,7 @@ const StreamModal = ({web3, open, handleClose, initialPhase, sealedSablierContra
         content = <RecipientForm
             account={account}
             web3={web3}
-            ERC1620Instance={ERC1620ContractInstance}
+            sealedSablierInstance={sealedSablierContractInstance}
             goBack={handleClose}
         />
     }
