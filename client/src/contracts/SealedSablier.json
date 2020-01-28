@@ -29,6 +29,55 @@
       "type": "constructor"
     },
     {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "streamId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "deposit",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "tokenAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "startTime",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "stopTime",
+          "type": "uint256"
+        }
+      ],
+      "name": "CreateSealedStream",
+      "type": "event"
+    },
+    {
       "constant": false,
       "inputs": [
         {
@@ -70,21 +119,21 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.11+commit.c082d0b4\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"deposit\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"tokenAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"stopTime\",\"type\":\"uint256\"}],\"name\":\"createStream\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"streamId\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"Sablier\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_Sablier\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}],\"devdoc\":{\"methods\":{\"createStream(address,uint256,address,uint256,uint256)\":{\"details\":\"Throws if the contract is not allowed to transfer enough tokens from msg.sender. Throws if approval of tokens for Sablier contract fails See function \\\"createStream\\\" in Sablier.sol for more details\",\"params\":{\"deposit\":\"The amount of money to be streamed.\",\"recipient\":\"The address towards which the money is streamed.\",\"startTime\":\"The unix timestamp for when the stream starts.\",\"stopTime\":\"The unix timestamp for when the stream stops.\",\"tokenAddress\":\"The ERC20 token to use as streaming currency.\"},\"return\":\"The uint256 id of the newly created stream.\"}}},\"userdoc\":{\"methods\":{\"createStream(address,uint256,address,uint256,uint256)\":{\"notice\":\"Creates a stream on Sablier on behalf of the real user.\"}},\"notice\":\"Workflow: 1. User approves SealedSablier contract to spend desired amount of tokens 2. User calls SealedSablier createStream() function. This function does in one transaction: a) transfer amount of tokens approved previously to itself b) approve Sablier contract to spend tokens that are now owned by SealedSablier contract c) Also approve msg.sender to spend tokens (See below why this is necessary) d) calls createStream() on Sablier contract. Sablier contract does: a) create stream where SealedSablier contract is the sender b) transfer previously approved tokens from SealedSablier contract to Sablier Result: - A new stream for recipient is created, with the SealedSablier contract as sender - Since the user is not the Sender he can not cancel or modify the stream anymore Benefits: - No risk of losing funds in temporary wallet due to browser/system crash or similar - No need to have the user transfer both ETH (to pay gas) and Token into temporary wallet to create a stream Risk: - Sablier streams can be cancelled both by sender or recipient. When a stream is cancelled, remaining funds will be transferred back to the sender. In this scenario the creator can not cancel the stream, but the receiver could still do it. This means the funds will be sent back to the SealedSablier contract, where they will be locked forever. To enable the stream creator to salvage these returned funds I'm approving the sender to spend any funds that end up in this contract - See \\\"Escape hatch\\\" notice below.\"}},\"settings\":{\"compilationTarget\":{\"/home/michael/WebstormProjects/web3Inheritance/contracts/SealedSablier.sol\":\"SealedSablier\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/michael/WebstormProjects/web3Inheritance/contracts/SealedSablier.sol\":{\"keccak256\":\"0x52b74bbf73d6ce92fc9fd270d4a07873843b54e6b8fea64eb06f802b285df743\",\"urls\":[\"bzz-raw://616ea61cb0dfdaa9c3660082ab7e648e3819c500dda0a84f6e167d2c48adb997\",\"dweb:/ipfs/QmXXxpvGJhmFxauoeHhxSbLpaekqpRSMY7KDKmCxWG326G\"]},\"/home/michael/WebstormProjects/web3Inheritance/contracts/interfaces/IERC1620.sol\":{\"keccak256\":\"0xf9969d5b243cc70b976281ba682fc0189c182eb0e57dba3969dc754b7413b934\",\"urls\":[\"bzz-raw://6695d8482830c00d23023dafa0ff8b8b15c8b10720596bd25207e33b222a3030\",\"dweb:/ipfs/QmNSfN3vdHf2TWygXraSjjQbuT5svyYtWeW2n469rmgdFU\"]},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xe5bb0f57cff3e299f360052ba50f1ea0fff046df2be070b6943e0e3c3fdad8a9\",\"urls\":[\"bzz-raw://59fd025151435da35faa8093a5c7a17de02de9d08ad27275c5cdf05050820d91\",\"dweb:/ipfs/QmQMvwEcPhoRXzbXyrdoeRtvLoifUW9Qh7Luho7bmUPRkc\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b5060405161078a38038061078a8339818101604052602081101561003357600080fd5b8101908080519060200190929190505050806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550506106f6806100946000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063cc1b4bf61461003b578063d1ecf20c146100d1575b600080fd5b6100bb600480360360a081101561005157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291908035906020019092919050505061011b565b6040518082815260200191505060405180910390f35b6100d96105eb565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008373ffffffffffffffffffffffffffffffffffffffff166323b872dd3330886040518463ffffffff1660e01b8152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019350505050602060405180830381600087803b1580156101d857600080fd5b505af11580156101ec573d6000803e3d6000fd5b505050506040513d602081101561020257600080fd5b8101908080519060200190929190505050610268576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603381526020018061068f6033913960400191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff1663095ea7b36000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff16876040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561031057600080fd5b505af1158015610324573d6000803e3d6000fd5b505050506040513d602081101561033a57600080fd5b81019080805190602001909291905050506103a0576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603f815260200180610611603f913960400191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff1663095ea7b3336000196040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561042957600080fd5b505af115801561043d573d6000803e3d6000fd5b505050506040513d602081101561045357600080fd5b81019080805190602001909291905050506104b9576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603f815260200180610650603f913960400191505060405180910390fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663cc1b4bf687878787876040518663ffffffff1660e01b8152600401808673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018581526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200182815260200195505050505050602060405180830381600087803b1580156105a557600080fd5b505af11580156105b9573d6000803e3d6000fd5b505050506040513d60208110156105cf57600080fd5b8101908080519060200190929190505050905095945050505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fe6661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f205361626c6965726661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f2043726561746f726661696c656420746f207472616e7366657220746f6b656e7320746f205365616c65645361626c69657220636f6e7472616374a265627a7a723158201c419b371e65a35af996a7a76bf2d851af173f418a6e6ff66d045c126a7d158b64736f6c634300050b0032",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c8063cc1b4bf61461003b578063d1ecf20c146100d1575b600080fd5b6100bb600480360360a081101561005157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291908035906020019092919050505061011b565b6040518082815260200191505060405180910390f35b6100d96105eb565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008373ffffffffffffffffffffffffffffffffffffffff166323b872dd3330886040518463ffffffff1660e01b8152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019350505050602060405180830381600087803b1580156101d857600080fd5b505af11580156101ec573d6000803e3d6000fd5b505050506040513d602081101561020257600080fd5b8101908080519060200190929190505050610268576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603381526020018061068f6033913960400191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff1663095ea7b36000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff16876040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561031057600080fd5b505af1158015610324573d6000803e3d6000fd5b505050506040513d602081101561033a57600080fd5b81019080805190602001909291905050506103a0576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603f815260200180610611603f913960400191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff1663095ea7b3336000196040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561042957600080fd5b505af115801561043d573d6000803e3d6000fd5b505050506040513d602081101561045357600080fd5b81019080805190602001909291905050506104b9576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603f815260200180610650603f913960400191505060405180910390fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663cc1b4bf687878787876040518663ffffffff1660e01b8152600401808673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018581526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200182815260200195505050505050602060405180830381600087803b1580156105a557600080fd5b505af11580156105b9573d6000803e3d6000fd5b505050506040513d60208110156105cf57600080fd5b8101908080519060200190929190505050905095945050505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fe6661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f205361626c6965726661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f2043726561746f726661696c656420746f207472616e7366657220746f6b656e7320746f205365616c65645361626c69657220636f6e7472616374a265627a7a723158201c419b371e65a35af996a7a76bf2d851af173f418a6e6ff66d045c126a7d158b64736f6c634300050b0032",
-  "sourceMap": "1815:2443:1:-;;;1874:72;8:9:-1;5:2;;;30:1;27;20:12;5:2;1874:72:1;;;;;;;;;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;1874:72:1;;;;;;;;;;;;;;;;1931:8;1921:7;;:18;;;;;;;;;;;;;;;;;;1874:72;1815:2443;;;;;;",
-  "deployedSourceMap": "1815:2443:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1815:2443:1;;;;;;;;;;;;;;;;;;;;;;;;2667:1589;;;;;;13:3:-1;8;5:12;2:2;;;30:1;27;20:12;2:2;2667:1589:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;1845:22;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;2667:1589;2816:16;3072:12;3065:33;;;3099:10;3119:4;3126:7;3065:69;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;3065:69:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;3065:69:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;3065:69:1;;;;;;;;;;;;;;;;3044:167;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3300:12;3293:28;;;3322:7;;;;;;;;;;;3331;3293:46;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;3293:46:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;3293:46:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;3293:46:1;;;;;;;;;;;;;;;;3285:143;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3938:12;3931:28;;;3960:10;3981:1;3972:11;3931:53;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;3931:53:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;3931:53:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;3931:53:1;;;;;;;;;;;;;;;;3923:150;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4173:7;;;;;;;;;;;4164:30;;;4195:9;4206:7;4215:12;4229:9;4240:8;4164:85;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;4164:85:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;4164:85:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;4164:85:1;;;;;;;;;;;;;;;;4153:96;;2667:1589;;;;;;;:::o;1845:22::-;;;;;;;;;;;;;:::o",
-  "source": "pragma solidity 0.5.11;\n\nimport \"@openzeppelin/contracts/token/ERC20/IERC20.sol\";\nimport \"./interfaces/IERC1620.sol\";\n\n/**\n    Workflow:\n    1. User approves SealedSablier contract to spend desired amount of tokens\n    2. User calls SealedSablier createStream() function. This function does in one transaction:\n        a) transfer amount of tokens approved previously to itself\n        b) approve Sablier contract to spend tokens that are now owned by SealedSablier contract\n        c) Also approve msg.sender to spend tokens (See below why this is necessary)\n        d) calls createStream() on Sablier contract. Sablier contract does:\n            a) create stream where SealedSablier contract is the sender\n            b) transfer previously approved tokens from SealedSablier contract to Sablier\n\n     Result:\n       - A new stream for recipient is created, with the SealedSablier contract as sender\n       - Since the user is not the Sender he can not cancel or modify the stream anymore\n\n     Benefits:\n       - No risk of losing funds in temporary wallet due to browser/system crash or similar\n       - No need to have the user transfer both ETH (to pay gas) and Token into temporary wallet to create\n         a stream\n\n     Risk:\n       - Sablier streams can be cancelled both by sender or recipient. When a stream is cancelled,\n         remaining funds will be transferred back to the sender.\n         In this scenario the creator can not cancel the stream, but the receiver could still do it.\n         This means the funds will be sent back to the SealedSablier contract, where they will be\n         locked forever.\n         To enable the stream creator to salvage these returned funds I'm approving the sender to spend\n         any funds that end up in this contract - See \"Escape hatch\" notice below.\n*/\n\ncontract SealedSablier {\n\n    address public Sablier;\n\n    constructor(address _Sablier) public {\n        Sablier = _Sablier;\n    }\n\n    /**\n     * @notice Creates a stream on Sablier on behalf of the real user.\n     * @dev Throws if the contract is not allowed to transfer enough tokens from msg.sender.\n     *  Throws if approval of tokens for Sablier contract fails\n     *  See function \"createStream\" in Sablier.sol for more details\n     * @param recipient The address towards which the money is streamed.\n     * @param deposit The amount of money to be streamed.\n     * @param tokenAddress The ERC20 token to use as streaming currency.\n     * @param startTime The unix timestamp for when the stream starts.\n     * @param stopTime The unix timestamp for when the stream stops.\n     * @return The uint256 id of the newly created stream.\n     */\n    function createStream(address recipient, uint256 deposit, address tokenAddress, uint256 startTime, uint256 stopTime)\n        public\n        returns (uint256 streamId)\n    {\n        // Note - Not doing any input validation here, as this is done anyway in the Sablier contract\n\n        // transfer tokens to be deposited to self. Will fail if not approved by msg.sender.\n        require(\n            IERC20(tokenAddress).transferFrom(msg.sender, address(this), deposit),\n            \"failed to transfer tokens to SealedSablier contract\"\n        );\n\n        // approve Sablier to spend the tokens I just acquired\n        require(IERC20(tokenAddress).approve(Sablier, deposit),\n            \"failed to approve tokens from SealedSablier contract to Sablier\"\n        );\n\n        // \"Escape hatch\" - We need to prevent locking funds forever in case recipient cancels stream and funds\n        // end up in this contract:\n        // Approve sender to transfer tokens owned by contract. Setting approval to MAX_UINT (~uint256(0)), as\n        // in worst case there might be multiple streams cancelled, so we don't know the total amount that might\n        // need rescue! Could instead use \"increaseApproval\" if it would be supported by all ERC20 contracts...\n        require(IERC20(tokenAddress).approve(msg.sender, ~uint256(0)),\n            \"failed to approve tokens from SealedSablier contract to Creator\"\n        );\n\n        // create stream on Sablier contract and return the streamID\n        streamId = IERC1620(Sablier).createStream(recipient, deposit, tokenAddress, startTime, stopTime);\n    }\n}\n",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.11+commit.c082d0b4\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"deposit\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"tokenAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"stopTime\",\"type\":\"uint256\"}],\"name\":\"createStream\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"streamId\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"Sablier\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_Sablier\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"streamId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"deposit\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"stopTime\",\"type\":\"uint256\"}],\"name\":\"CreateSealedStream\",\"type\":\"event\"}],\"devdoc\":{\"methods\":{\"createStream(address,uint256,address,uint256,uint256)\":{\"details\":\"Throws if the contract is not allowed to transfer enough tokens from msg.sender. Throws if approval of tokens for Sablier contract fails See function \\\"createStream\\\" in Sablier.sol for more details\",\"params\":{\"deposit\":\"The amount of money to be streamed.\",\"recipient\":\"The address towards which the money is streamed.\",\"startTime\":\"The unix timestamp for when the stream starts.\",\"stopTime\":\"The unix timestamp for when the stream stops.\",\"tokenAddress\":\"The ERC20 token to use as streaming currency.\"},\"return\":\"The uint256 id of the newly created stream.\"}}},\"userdoc\":{\"methods\":{\"createStream(address,uint256,address,uint256,uint256)\":{\"notice\":\"Creates a stream on Sablier on behalf of the real user.\"}},\"notice\":\"Workflow: 1. User approves SealedSablier contract to spend desired amount of tokens 2. User calls SealedSablier createStream() function. This function does in one transaction: a) transfer amount of tokens approved previously to itself b) approve Sablier contract to spend tokens that are now owned by SealedSablier contract c) Also approve msg.sender to spend tokens (See below why this is necessary) d) calls createStream() on Sablier contract. Sablier contract does: a) create stream where SealedSablier contract is the sender b) transfer previously approved tokens from SealedSablier contract to Sablier Result: - A new stream for recipient is created, with the SealedSablier contract as sender - Since the user is not the Sender he can not cancel or modify the stream anymore Benefits: - No risk of losing funds in temporary wallet due to browser/system crash or similar - No need to have the user transfer both ETH (to pay gas) and Token into temporary wallet to create a stream Risk: - Sablier streams can be cancelled both by sender or recipient. When a stream is cancelled, remaining funds will be transferred back to the sender. In this scenario the creator can not cancel the stream, but the receiver could still do it. This means the funds will be sent back to the SealedSablier contract, where they will be locked forever. To enable the stream creator to salvage these returned funds I'm approving the sender to spend any funds that end up in this contract - See \\\"Escape hatch\\\" notice below.\"}},\"settings\":{\"compilationTarget\":{\"/home/michael/WebstormProjects/web3Inheritance/contracts/SealedSablier.sol\":\"SealedSablier\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/michael/WebstormProjects/web3Inheritance/contracts/SealedSablier.sol\":{\"keccak256\":\"0x35630d7baaa7ba9b2de33e642f8afd6754e60db4ece6b924f602a371b926b6a9\",\"urls\":[\"bzz-raw://f8ae866f8df59250f03719621b8539d906e0c998c153854d638c47a67f6bbfec\",\"dweb:/ipfs/QmSPPC77NtJA4Sp5cxBRZPQDCqUXxPcC1QahGsrnaqffZA\"]},\"/home/michael/WebstormProjects/web3Inheritance/contracts/interfaces/IERC1620.sol\":{\"keccak256\":\"0xf9969d5b243cc70b976281ba682fc0189c182eb0e57dba3969dc754b7413b934\",\"urls\":[\"bzz-raw://6695d8482830c00d23023dafa0ff8b8b15c8b10720596bd25207e33b222a3030\",\"dweb:/ipfs/QmNSfN3vdHf2TWygXraSjjQbuT5svyYtWeW2n469rmgdFU\"]},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xe5bb0f57cff3e299f360052ba50f1ea0fff046df2be070b6943e0e3c3fdad8a9\",\"urls\":[\"bzz-raw://59fd025151435da35faa8093a5c7a17de02de9d08ad27275c5cdf05050820d91\",\"dweb:/ipfs/QmQMvwEcPhoRXzbXyrdoeRtvLoifUW9Qh7Luho7bmUPRkc\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b506040516108343803806108348339818101604052602081101561003357600080fd5b8101908080519060200190929190505050806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550506107a0806100946000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063cc1b4bf61461003b578063d1ecf20c146100d1575b600080fd5b6100bb600480360360a081101561005157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291908035906020019092919050505061011b565b6040518082815260200191505060405180910390f35b6100d9610695565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008373ffffffffffffffffffffffffffffffffffffffff166323b872dd3330886040518463ffffffff1660e01b8152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019350505050602060405180830381600087803b1580156101d857600080fd5b505af11580156101ec573d6000803e3d6000fd5b505050506040513d602081101561020257600080fd5b8101908080519060200190929190505050610268576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260338152602001806107396033913960400191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff1663095ea7b36000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff16876040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561031057600080fd5b505af1158015610324573d6000803e3d6000fd5b505050506040513d602081101561033a57600080fd5b81019080805190602001909291905050506103a0576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603f8152602001806106bb603f913960400191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff1663095ea7b3336000196040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561042957600080fd5b505af115801561043d573d6000803e3d6000fd5b505050506040513d602081101561045357600080fd5b81019080805190602001909291905050506104b9576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603f8152602001806106fa603f913960400191505060405180910390fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663cc1b4bf687878787876040518663ffffffff1660e01b8152600401808673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018581526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200182815260200195505050505050602060405180830381600087803b1580156105a557600080fd5b505af11580156105b9573d6000803e3d6000fd5b505050506040513d60208110156105cf57600080fd5b810190808051906020019092919050505090508573ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16827fca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce888888888604051808581526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200182815260200194505050505060405180910390a495945050505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fe6661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f205361626c6965726661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f2043726561746f726661696c656420746f207472616e7366657220746f6b656e7320746f205365616c65645361626c69657220636f6e7472616374a265627a7a72315820efe2a9576e22cba5fb30432e42ee89747f3dbadb9c46cfa9ea184e38976aa57764736f6c634300050b0032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c8063cc1b4bf61461003b578063d1ecf20c146100d1575b600080fd5b6100bb600480360360a081101561005157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291908035906020019092919050505061011b565b6040518082815260200191505060405180910390f35b6100d9610695565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008373ffffffffffffffffffffffffffffffffffffffff166323b872dd3330886040518463ffffffff1660e01b8152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019350505050602060405180830381600087803b1580156101d857600080fd5b505af11580156101ec573d6000803e3d6000fd5b505050506040513d602081101561020257600080fd5b8101908080519060200190929190505050610268576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260338152602001806107396033913960400191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff1663095ea7b36000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff16876040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561031057600080fd5b505af1158015610324573d6000803e3d6000fd5b505050506040513d602081101561033a57600080fd5b81019080805190602001909291905050506103a0576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603f8152602001806106bb603f913960400191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff1663095ea7b3336000196040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561042957600080fd5b505af115801561043d573d6000803e3d6000fd5b505050506040513d602081101561045357600080fd5b81019080805190602001909291905050506104b9576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603f8152602001806106fa603f913960400191505060405180910390fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663cc1b4bf687878787876040518663ffffffff1660e01b8152600401808673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018581526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200182815260200195505050505050602060405180830381600087803b1580156105a557600080fd5b505af11580156105b9573d6000803e3d6000fd5b505050506040513d60208110156105cf57600080fd5b810190808051906020019092919050505090508573ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16827fca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce888888888604051808581526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200182815260200194505050505060405180910390a495945050505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fe6661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f205361626c6965726661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f2043726561746f726661696c656420746f207472616e7366657220746f6b656e7320746f205365616c65645361626c69657220636f6e7472616374a265627a7a72315820efe2a9576e22cba5fb30432e42ee89747f3dbadb9c46cfa9ea184e38976aa57764736f6c634300050b0032",
+  "sourceMap": "1815:2905:1:-;;;2203:72;8:9:-1;5:2;;;30:1;27;20:12;5:2;2203:72:1;;;;;;;;;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;2203:72:1;;;;;;;;;;;;;;;;2260:8;2250:7;;:18;;;;;;;;;;;;;;;;;;2203:72;1815:2905;;;;;;",
+  "deployedSourceMap": "1815:2905:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1815:2905:1;;;;;;;;;;;;;;;;;;;;;;;;2996:1722;;;;;;13:3:-1;8;5:12;2:2;;;30:1;27;20:12;2:2;2996:1722:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;1845:22;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;2996:1722;3145:16;3401:12;3394:33;;;3428:10;3448:4;3455:7;3394:69;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;3394:69:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;3394:69:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;3394:69:1;;;;;;;;;;;;;;;;3373:167;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3629:12;3622:28;;;3651:7;;;;;;;;;;;3660;3622:46;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;3622:46:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;3622:46:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;3622:46:1;;;;;;;;;;;;;;;;3614:143;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4267:12;4260:28;;;4289:10;4310:1;4301:11;4260:53;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;4260:53:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;4260:53:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;4260:53:1;;;;;;;;;;;;;;;;4252:150;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4502:7;;;;;;;;;;;4493:30;;;4524:9;4535:7;4544:12;4558:9;4569:8;4493:85;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;4493:85:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;4493:85:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;4493:85:1;;;;;;;;;;;;;;;;4482:96;;4657:9;4616:95;;4645:10;4616:95;;4635:8;4616:95;4668:7;4677:12;4691:9;4702:8;4616:95;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2996:1722;;;;;;;:::o;1845:22::-;;;;;;;;;;;;;:::o",
+  "source": "pragma solidity 0.5.11;\n\nimport \"@openzeppelin/contracts/token/ERC20/IERC20.sol\";\nimport \"./interfaces/IERC1620.sol\";\n\n/**\n    Workflow:\n    1. User approves SealedSablier contract to spend desired amount of tokens\n    2. User calls SealedSablier createStream() function. This function does in one transaction:\n        a) transfer amount of tokens approved previously to itself\n        b) approve Sablier contract to spend tokens that are now owned by SealedSablier contract\n        c) Also approve msg.sender to spend tokens (See below why this is necessary)\n        d) calls createStream() on Sablier contract. Sablier contract does:\n            a) create stream where SealedSablier contract is the sender\n            b) transfer previously approved tokens from SealedSablier contract to Sablier\n\n     Result:\n       - A new stream for recipient is created, with the SealedSablier contract as sender\n       - Since the user is not the Sender he can not cancel or modify the stream anymore\n\n     Benefits:\n       - No risk of losing funds in temporary wallet due to browser/system crash or similar\n       - No need to have the user transfer both ETH (to pay gas) and Token into temporary wallet to create\n         a stream\n\n     Risk:\n       - Sablier streams can be cancelled both by sender or recipient. When a stream is cancelled,\n         remaining funds will be transferred back to the sender.\n         In this scenario the creator can not cancel the stream, but the receiver could still do it.\n         This means the funds will be sent back to the SealedSablier contract, where they will be\n         locked forever.\n         To enable the stream creator to salvage these returned funds I'm approving the sender to spend\n         any funds that end up in this contract - See \"Escape hatch\" notice below.\n*/\n\ncontract SealedSablier {\n\n    address public Sablier;\n\n    /**\n     * @notice Emits when a sealed stream is successfully created.\n     */\n    event CreateSealedStream(\n        uint256 indexed streamId,\n        address indexed sender,\n        address indexed recipient,\n        uint256 deposit,\n        address tokenAddress,\n        uint256 startTime,\n        uint256 stopTime\n    );\n\n    constructor(address _Sablier) public {\n        Sablier = _Sablier;\n    }\n\n    /**\n     * @notice Creates a stream on Sablier on behalf of the real user.\n     * @dev Throws if the contract is not allowed to transfer enough tokens from msg.sender.\n     *  Throws if approval of tokens for Sablier contract fails\n     *  See function \"createStream\" in Sablier.sol for more details\n     * @param recipient The address towards which the money is streamed.\n     * @param deposit The amount of money to be streamed.\n     * @param tokenAddress The ERC20 token to use as streaming currency.\n     * @param startTime The unix timestamp for when the stream starts.\n     * @param stopTime The unix timestamp for when the stream stops.\n     * @return The uint256 id of the newly created stream.\n     */\n    function createStream(address recipient, uint256 deposit, address tokenAddress, uint256 startTime, uint256 stopTime)\n        public\n        returns (uint256 streamId)\n    {\n        // Note - Not doing any input validation here, as this is done anyway in the Sablier contract\n\n        // transfer tokens to be deposited to self. Will fail if not approved by msg.sender.\n        require(\n            IERC20(tokenAddress).transferFrom(msg.sender, address(this), deposit),\n            \"failed to transfer tokens to SealedSablier contract\"\n        );\n\n        // approve Sablier to spend the tokens I just acquired\n        require(IERC20(tokenAddress).approve(Sablier, deposit),\n            \"failed to approve tokens from SealedSablier contract to Sablier\"\n        );\n\n        // \"Escape hatch\" - We need to prevent locking funds forever in case recipient cancels stream and funds\n        // end up in this contract:\n        // Approve sender to transfer tokens owned by contract. Setting approval to MAX_UINT (~uint256(0)), as\n        // in worst case there might be multiple streams cancelled, so we don't know the total amount that might\n        // need rescue! Could instead use \"increaseApproval\" if it would be supported by all ERC20 contracts...\n        require(IERC20(tokenAddress).approve(msg.sender, ~uint256(0)),\n            \"failed to approve tokens from SealedSablier contract to Creator\"\n        );\n\n        // create stream on Sablier contract and return the streamID\n        streamId = IERC1620(Sablier).createStream(recipient, deposit, tokenAddress, startTime, stopTime);\n\n        // emit event\n        emit CreateSealedStream(streamId, msg.sender, recipient, deposit, tokenAddress, startTime, stopTime);\n    }\n}\n",
   "sourcePath": "/home/michael/WebstormProjects/web3Inheritance/contracts/SealedSablier.sol",
   "ast": {
     "absolutePath": "/home/michael/WebstormProjects/web3Inheritance/contracts/SealedSablier.sol",
     "exportedSymbols": {
       "SealedSablier": [
-        143
+        170
       ]
     },
-    "id": 144,
+    "id": 171,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -102,8 +151,8 @@
         "file": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "id": 59,
         "nodeType": "ImportDirective",
-        "scope": 144,
-        "sourceUnit": 1055,
+        "scope": 171,
+        "sourceUnit": 1082,
         "src": "25:56:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -113,8 +162,8 @@
         "file": "./interfaces/IERC1620.sol",
         "id": 60,
         "nodeType": "ImportDirective",
-        "scope": 144,
-        "sourceUnit": 272,
+        "scope": 171,
+        "sourceUnit": 299,
         "src": "82:35:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -125,9 +174,9 @@
         "contractKind": "contract",
         "documentation": "Workflow:\n1. User approves SealedSablier contract to spend desired amount of tokens\n2. User calls SealedSablier createStream() function. This function does in one transaction:\na) transfer amount of tokens approved previously to itself\nb) approve Sablier contract to spend tokens that are now owned by SealedSablier contract\nc) Also approve msg.sender to spend tokens (See below why this is necessary)\nd) calls createStream() on Sablier contract. Sablier contract does:\na) create stream where SealedSablier contract is the sender\nb) transfer previously approved tokens from SealedSablier contract to Sablier\nResult:\n- A new stream for recipient is created, with the SealedSablier contract as sender\n- Since the user is not the Sender he can not cancel or modify the stream anymore\nBenefits:\n- No risk of losing funds in temporary wallet due to browser/system crash or similar\n- No need to have the user transfer both ETH (to pay gas) and Token into temporary wallet to create\na stream\nRisk:\n- Sablier streams can be cancelled both by sender or recipient. When a stream is cancelled,\nremaining funds will be transferred back to the sender.\nIn this scenario the creator can not cancel the stream, but the receiver could still do it.\nThis means the funds will be sent back to the SealedSablier contract, where they will be\nlocked forever.\nTo enable the stream creator to salvage these returned funds I'm approving the sender to spend\nany funds that end up in this contract - See \"Escape hatch\" notice below.",
         "fullyImplemented": true,
-        "id": 143,
+        "id": 170,
         "linearizedBaseContracts": [
-          143
+          170
         ],
         "name": "SealedSablier",
         "nodeType": "ContractDefinition",
@@ -137,7 +186,7 @@
             "id": 62,
             "name": "Sablier",
             "nodeType": "VariableDeclaration",
-            "scope": 143,
+            "scope": 170,
             "src": "1845:22:1",
             "stateVariable": true,
             "storageLocation": "default",
@@ -160,27 +209,234 @@
             "visibility": "public"
           },
           {
+            "anonymous": false,
+            "documentation": "@notice Emits when a sealed stream is successfully created.",
+            "id": 78,
+            "name": "CreateSealedStream",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 77,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 64,
+                  "indexed": true,
+                  "name": "streamId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 78,
+                  "src": "1991:24:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 63,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1991:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 66,
+                  "indexed": true,
+                  "name": "sender",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 78,
+                  "src": "2025:22:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 65,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2025:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 68,
+                  "indexed": true,
+                  "name": "recipient",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 78,
+                  "src": "2057:25:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 67,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2057:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 70,
+                  "indexed": false,
+                  "name": "deposit",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 78,
+                  "src": "2092:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 69,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2092:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 72,
+                  "indexed": false,
+                  "name": "tokenAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 78,
+                  "src": "2117:20:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 71,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2117:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 74,
+                  "indexed": false,
+                  "name": "startTime",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 78,
+                  "src": "2147:17:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 73,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2147:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 76,
+                  "indexed": false,
+                  "name": "stopTime",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 78,
+                  "src": "2174:16:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 75,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2174:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1981:215:1"
+            },
+            "src": "1957:240:1"
+          },
+          {
             "body": {
-              "id": 71,
+              "id": 87,
               "nodeType": "Block",
-              "src": "1911:35:1",
+              "src": "2240:35:1",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 69,
+                    "id": 85,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 67,
+                      "id": 83,
                       "name": "Sablier",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 62,
-                      "src": "1921:7:1",
+                      "src": "2250:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -190,47 +446,47 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 68,
+                      "id": 84,
                       "name": "_Sablier",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 64,
-                      "src": "1931:8:1",
+                      "referencedDeclaration": 80,
+                      "src": "2260:8:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "src": "1921:18:1",
+                    "src": "2250:18:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
                     }
                   },
-                  "id": 70,
+                  "id": 86,
                   "nodeType": "ExpressionStatement",
-                  "src": "1921:18:1"
+                  "src": "2250:18:1"
                 }
               ]
             },
             "documentation": null,
-            "id": 72,
+            "id": 88,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 65,
+              "id": 81,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 64,
+                  "id": 80,
                   "name": "_Sablier",
                   "nodeType": "VariableDeclaration",
-                  "scope": 72,
-                  "src": "1886:16:1",
+                  "scope": 88,
+                  "src": "2215:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -238,10 +494,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 63,
+                    "id": 79,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1886:7:1",
+                    "src": "2215:7:1",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -252,25 +508,25 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1885:18:1"
+              "src": "2214:18:1"
             },
             "returnParameters": {
-              "id": 66,
+              "id": 82,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1911:0:1"
+              "src": "2240:0:1"
             },
-            "scope": 143,
-            "src": "1874:72:1",
+            "scope": 170,
+            "src": "2203:72:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 141,
+              "id": 168,
               "nodeType": "Block",
-              "src": "2838:1418:1",
+              "src": "3167:1551:1",
               "statements": [
                 {
                   "expression": {
@@ -283,18 +539,18 @@
                             "argumentTypes": null,
                             "expression": {
                               "argumentTypes": null,
-                              "id": 92,
+                              "id": 108,
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1069,
-                              "src": "3099:3:1",
+                              "referencedDeclaration": 1096,
+                              "src": "3428:3:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
                                 "typeString": "msg"
                               }
                             },
-                            "id": 93,
+                            "id": 109,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -302,7 +558,7 @@
                             "memberName": "sender",
                             "nodeType": "MemberAccess",
                             "referencedDeclaration": null,
-                            "src": "3099:10:1",
+                            "src": "3428:10:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address_payable",
                               "typeString": "address payable"
@@ -313,14 +569,14 @@
                             "arguments": [
                               {
                                 "argumentTypes": null,
-                                "id": 95,
+                                "id": 111,
                                 "name": "this",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 1087,
-                                "src": "3119:4:1",
+                                "referencedDeclaration": 1114,
+                                "src": "3448:4:1",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_contract$_SealedSablier_$143",
+                                  "typeIdentifier": "t_contract$_SealedSablier_$170",
                                   "typeString": "contract SealedSablier"
                                 }
                               }
@@ -328,24 +584,24 @@
                             "expression": {
                               "argumentTypes": [
                                 {
-                                  "typeIdentifier": "t_contract$_SealedSablier_$143",
+                                  "typeIdentifier": "t_contract$_SealedSablier_$170",
                                   "typeString": "contract SealedSablier"
                                 }
                               ],
-                              "id": 94,
+                              "id": 110,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
                               "lValueRequested": false,
                               "nodeType": "ElementaryTypeNameExpression",
-                              "src": "3111:7:1",
+                              "src": "3440:7:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_type$_t_address_$",
                                 "typeString": "type(address)"
                               },
                               "typeName": "address"
                             },
-                            "id": 96,
+                            "id": 112,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -353,7 +609,7 @@
                             "lValueRequested": false,
                             "names": [],
                             "nodeType": "FunctionCall",
-                            "src": "3111:13:1",
+                            "src": "3440:13:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
                               "typeString": "address"
@@ -361,12 +617,12 @@
                           },
                           {
                             "argumentTypes": null,
-                            "id": 97,
+                            "id": 113,
                             "name": "deposit",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 76,
-                            "src": "3126:7:1",
+                            "referencedDeclaration": 92,
+                            "src": "3455:7:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -393,12 +649,12 @@
                             "arguments": [
                               {
                                 "argumentTypes": null,
-                                "id": 89,
+                                "id": 105,
                                 "name": "tokenAddress",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 78,
-                                "src": "3072:12:1",
+                                "referencedDeclaration": 94,
+                                "src": "3401:12:1",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_address",
                                   "typeString": "address"
@@ -412,18 +668,18 @@
                                   "typeString": "address"
                                 }
                               ],
-                              "id": 88,
+                              "id": 104,
                               "name": "IERC20",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1054,
-                              "src": "3065:6:1",
+                              "referencedDeclaration": 1081,
+                              "src": "3394:6:1",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_contract$_IERC20_$1054_$",
+                                "typeIdentifier": "t_type$_t_contract$_IERC20_$1081_$",
                                 "typeString": "type(contract IERC20)"
                               }
                             },
-                            "id": 90,
+                            "id": 106,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -431,27 +687,27 @@
                             "lValueRequested": false,
                             "names": [],
                             "nodeType": "FunctionCall",
-                            "src": "3065:20:1",
+                            "src": "3394:20:1",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_IERC20_$1054",
+                              "typeIdentifier": "t_contract$_IERC20_$1081",
                               "typeString": "contract IERC20"
                             }
                           },
-                          "id": 91,
+                          "id": 107,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "memberName": "transferFrom",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 1037,
-                          "src": "3065:33:1",
+                          "referencedDeclaration": 1064,
+                          "src": "3394:33:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$_t_bool_$",
                             "typeString": "function (address,address,uint256) external returns (bool)"
                           }
                         },
-                        "id": 98,
+                        "id": 114,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -459,7 +715,7 @@
                         "lValueRequested": false,
                         "names": [],
                         "nodeType": "FunctionCall",
-                        "src": "3065:69:1",
+                        "src": "3394:69:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -468,14 +724,14 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "6661696c656420746f207472616e7366657220746f6b656e7320746f205365616c65645361626c69657220636f6e7472616374",
-                        "id": 99,
+                        "id": 115,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "string",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "3148:53:1",
+                        "src": "3477:53:1",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_f75daf8eee08d28106b9603da5d33e17322bf5aaa11eb36a8f3ac3c19c45badd",
@@ -495,21 +751,21 @@
                           "typeString": "literal_string \"failed to transfer tokens to SealedSablier contract\""
                         }
                       ],
-                      "id": 87,
+                      "id": 103,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1072,
-                        1073
+                        1099,
+                        1100
                       ],
-                      "referencedDeclaration": 1073,
-                      "src": "3044:7:1",
+                      "referencedDeclaration": 1100,
+                      "src": "3373:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 100,
+                    "id": 116,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -517,15 +773,15 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "3044:167:1",
+                    "src": "3373:167:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 101,
+                  "id": 117,
                   "nodeType": "ExpressionStatement",
-                  "src": "3044:167:1"
+                  "src": "3373:167:1"
                 },
                 {
                   "expression": {
@@ -536,12 +792,12 @@
                         "arguments": [
                           {
                             "argumentTypes": null,
-                            "id": 107,
+                            "id": 123,
                             "name": "Sablier",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 62,
-                            "src": "3322:7:1",
+                            "src": "3651:7:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
                               "typeString": "address"
@@ -549,12 +805,12 @@
                           },
                           {
                             "argumentTypes": null,
-                            "id": 108,
+                            "id": 124,
                             "name": "deposit",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 76,
-                            "src": "3331:7:1",
+                            "referencedDeclaration": 92,
+                            "src": "3660:7:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -577,12 +833,12 @@
                             "arguments": [
                               {
                                 "argumentTypes": null,
-                                "id": 104,
+                                "id": 120,
                                 "name": "tokenAddress",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 78,
-                                "src": "3300:12:1",
+                                "referencedDeclaration": 94,
+                                "src": "3629:12:1",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_address",
                                   "typeString": "address"
@@ -596,18 +852,18 @@
                                   "typeString": "address"
                                 }
                               ],
-                              "id": 103,
+                              "id": 119,
                               "name": "IERC20",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1054,
-                              "src": "3293:6:1",
+                              "referencedDeclaration": 1081,
+                              "src": "3622:6:1",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_contract$_IERC20_$1054_$",
+                                "typeIdentifier": "t_type$_t_contract$_IERC20_$1081_$",
                                 "typeString": "type(contract IERC20)"
                               }
                             },
-                            "id": 105,
+                            "id": 121,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -615,27 +871,27 @@
                             "lValueRequested": false,
                             "names": [],
                             "nodeType": "FunctionCall",
-                            "src": "3293:20:1",
+                            "src": "3622:20:1",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_IERC20_$1054",
+                              "typeIdentifier": "t_contract$_IERC20_$1081",
                               "typeString": "contract IERC20"
                             }
                           },
-                          "id": 106,
+                          "id": 122,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "memberName": "approve",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 1026,
-                          "src": "3293:28:1",
+                          "referencedDeclaration": 1053,
+                          "src": "3622:28:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
                             "typeString": "function (address,uint256) external returns (bool)"
                           }
                         },
-                        "id": 109,
+                        "id": 125,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -643,7 +899,7 @@
                         "lValueRequested": false,
                         "names": [],
                         "nodeType": "FunctionCall",
-                        "src": "3293:46:1",
+                        "src": "3622:46:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -652,14 +908,14 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "6661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f205361626c696572",
-                        "id": 110,
+                        "id": 126,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "string",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "3353:65:1",
+                        "src": "3682:65:1",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_e3ce1eb0d2870cfa2cbac7bcda6e7750a6e0eefe717d596036a8c97b3f37b988",
@@ -679,21 +935,21 @@
                           "typeString": "literal_string \"failed to approve tokens from SealedSablier contract to Sablier\""
                         }
                       ],
-                      "id": 102,
+                      "id": 118,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1072,
-                        1073
+                        1099,
+                        1100
                       ],
-                      "referencedDeclaration": 1073,
-                      "src": "3285:7:1",
+                      "referencedDeclaration": 1100,
+                      "src": "3614:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 111,
+                    "id": 127,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -701,15 +957,15 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "3285:143:1",
+                    "src": "3614:143:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 112,
+                  "id": 128,
                   "nodeType": "ExpressionStatement",
-                  "src": "3285:143:1"
+                  "src": "3614:143:1"
                 },
                 {
                   "expression": {
@@ -722,18 +978,18 @@
                             "argumentTypes": null,
                             "expression": {
                               "argumentTypes": null,
-                              "id": 118,
+                              "id": 134,
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1069,
-                              "src": "3960:3:1",
+                              "referencedDeclaration": 1096,
+                              "src": "4289:3:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
                                 "typeString": "msg"
                               }
                             },
-                            "id": 119,
+                            "id": 135,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -741,7 +997,7 @@
                             "memberName": "sender",
                             "nodeType": "MemberAccess",
                             "referencedDeclaration": null,
-                            "src": "3960:10:1",
+                            "src": "4289:10:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address_payable",
                               "typeString": "address payable"
@@ -749,7 +1005,7 @@
                           },
                           {
                             "argumentTypes": null,
-                            "id": 123,
+                            "id": 139,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -757,21 +1013,21 @@
                             "nodeType": "UnaryOperation",
                             "operator": "~",
                             "prefix": true,
-                            "src": "3972:11:1",
+                            "src": "4301:11:1",
                             "subExpression": {
                               "argumentTypes": null,
                               "arguments": [
                                 {
                                   "argumentTypes": null,
                                   "hexValue": "30",
-                                  "id": 121,
+                                  "id": 137,
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": true,
                                   "kind": "number",
                                   "lValueRequested": false,
                                   "nodeType": "Literal",
-                                  "src": "3981:1:1",
+                                  "src": "4310:1:1",
                                   "subdenomination": null,
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_rational_0_by_1",
@@ -787,20 +1043,20 @@
                                     "typeString": "int_const 0"
                                   }
                                 ],
-                                "id": 120,
+                                "id": 136,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": true,
                                 "lValueRequested": false,
                                 "nodeType": "ElementaryTypeNameExpression",
-                                "src": "3973:7:1",
+                                "src": "4302:7:1",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_type$_t_uint256_$",
                                   "typeString": "type(uint256)"
                                 },
                                 "typeName": "uint256"
                               },
-                              "id": 122,
+                              "id": 138,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
@@ -808,7 +1064,7 @@
                               "lValueRequested": false,
                               "names": [],
                               "nodeType": "FunctionCall",
-                              "src": "3973:10:1",
+                              "src": "4302:10:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_uint256",
                                 "typeString": "uint256"
@@ -836,12 +1092,12 @@
                             "arguments": [
                               {
                                 "argumentTypes": null,
-                                "id": 115,
+                                "id": 131,
                                 "name": "tokenAddress",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 78,
-                                "src": "3938:12:1",
+                                "referencedDeclaration": 94,
+                                "src": "4267:12:1",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_address",
                                   "typeString": "address"
@@ -855,18 +1111,18 @@
                                   "typeString": "address"
                                 }
                               ],
-                              "id": 114,
+                              "id": 130,
                               "name": "IERC20",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1054,
-                              "src": "3931:6:1",
+                              "referencedDeclaration": 1081,
+                              "src": "4260:6:1",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_contract$_IERC20_$1054_$",
+                                "typeIdentifier": "t_type$_t_contract$_IERC20_$1081_$",
                                 "typeString": "type(contract IERC20)"
                               }
                             },
-                            "id": 116,
+                            "id": 132,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -874,27 +1130,27 @@
                             "lValueRequested": false,
                             "names": [],
                             "nodeType": "FunctionCall",
-                            "src": "3931:20:1",
+                            "src": "4260:20:1",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_IERC20_$1054",
+                              "typeIdentifier": "t_contract$_IERC20_$1081",
                               "typeString": "contract IERC20"
                             }
                           },
-                          "id": 117,
+                          "id": 133,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "memberName": "approve",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 1026,
-                          "src": "3931:28:1",
+                          "referencedDeclaration": 1053,
+                          "src": "4260:28:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
                             "typeString": "function (address,uint256) external returns (bool)"
                           }
                         },
-                        "id": 124,
+                        "id": 140,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -902,7 +1158,7 @@
                         "lValueRequested": false,
                         "names": [],
                         "nodeType": "FunctionCall",
-                        "src": "3931:53:1",
+                        "src": "4260:53:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -911,14 +1167,14 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "6661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f2043726561746f72",
-                        "id": 125,
+                        "id": 141,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "string",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "3998:65:1",
+                        "src": "4327:65:1",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_f0883016df38a016a743bfc96167b5cb4905b377d7f4b2cf226d1d10b1c618e7",
@@ -938,21 +1194,21 @@
                           "typeString": "literal_string \"failed to approve tokens from SealedSablier contract to Creator\""
                         }
                       ],
-                      "id": 113,
+                      "id": 129,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1072,
-                        1073
+                        1099,
+                        1100
                       ],
-                      "referencedDeclaration": 1073,
-                      "src": "3923:7:1",
+                      "referencedDeclaration": 1100,
+                      "src": "4252:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 126,
+                    "id": 142,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -960,32 +1216,32 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "3923:150:1",
+                    "src": "4252:150:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 127,
+                  "id": 143,
                   "nodeType": "ExpressionStatement",
-                  "src": "3923:150:1"
+                  "src": "4252:150:1"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 139,
+                    "id": 155,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 128,
+                      "id": 144,
                       "name": "streamId",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 85,
-                      "src": "4153:8:1",
+                      "referencedDeclaration": 101,
+                      "src": "4482:8:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -998,12 +1254,12 @@
                       "arguments": [
                         {
                           "argumentTypes": null,
-                          "id": 133,
+                          "id": 149,
                           "name": "recipient",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 74,
-                          "src": "4195:9:1",
+                          "referencedDeclaration": 90,
+                          "src": "4524:9:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -1011,12 +1267,12 @@
                         },
                         {
                           "argumentTypes": null,
-                          "id": 134,
+                          "id": 150,
                           "name": "deposit",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 76,
-                          "src": "4206:7:1",
+                          "referencedDeclaration": 92,
+                          "src": "4535:7:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -1024,12 +1280,12 @@
                         },
                         {
                           "argumentTypes": null,
-                          "id": 135,
+                          "id": 151,
                           "name": "tokenAddress",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 78,
-                          "src": "4215:12:1",
+                          "referencedDeclaration": 94,
+                          "src": "4544:12:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -1037,12 +1293,12 @@
                         },
                         {
                           "argumentTypes": null,
-                          "id": 136,
+                          "id": 152,
                           "name": "startTime",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 80,
-                          "src": "4229:9:1",
+                          "referencedDeclaration": 96,
+                          "src": "4558:9:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -1050,12 +1306,12 @@
                         },
                         {
                           "argumentTypes": null,
-                          "id": 137,
+                          "id": 153,
                           "name": "stopTime",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 82,
-                          "src": "4240:8:1",
+                          "referencedDeclaration": 98,
+                          "src": "4569:8:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -1090,12 +1346,12 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "id": 130,
+                              "id": 146,
                               "name": "Sablier",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
                               "referencedDeclaration": 62,
-                              "src": "4173:7:1",
+                              "src": "4502:7:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_address",
                                 "typeString": "address"
@@ -1109,18 +1365,18 @@
                                 "typeString": "address"
                               }
                             ],
-                            "id": 129,
+                            "id": 145,
                             "name": "IERC1620",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 271,
-                            "src": "4164:8:1",
+                            "referencedDeclaration": 298,
+                            "src": "4493:8:1",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_type$_t_contract$_IERC1620_$271_$",
+                              "typeIdentifier": "t_type$_t_contract$_IERC1620_$298_$",
                               "typeString": "type(contract IERC1620)"
                             }
                           },
-                          "id": 131,
+                          "id": 147,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -1128,27 +1384,27 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "4164:17:1",
+                          "src": "4493:17:1",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_IERC1620_$271",
+                            "typeIdentifier": "t_contract$_IERC1620_$298",
                             "typeString": "contract IERC1620"
                           }
                         },
-                        "id": 132,
+                        "id": 148,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "memberName": "createStream",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 254,
-                        "src": "4164:30:1",
+                        "referencedDeclaration": 281,
+                        "src": "4493:30:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$_t_address_$_t_uint256_$_t_uint256_$returns$_t_uint256_$",
                           "typeString": "function (address,uint256,address,uint256,uint256) external returns (uint256)"
                         }
                       },
-                      "id": 138,
+                      "id": 154,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -1156,42 +1412,214 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "4164:85:1",
+                      "src": "4493:85:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "4153:96:1",
+                    "src": "4482:96:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 140,
+                  "id": 156,
                   "nodeType": "ExpressionStatement",
-                  "src": "4153:96:1"
+                  "src": "4482:96:1"
+                },
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 158,
+                        "name": "streamId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 101,
+                        "src": "4635:8:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 159,
+                          "name": "msg",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1096,
+                          "src": "4645:3:1",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_message",
+                            "typeString": "msg"
+                          }
+                        },
+                        "id": 160,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "sender",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "4645:10:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 161,
+                        "name": "recipient",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 90,
+                        "src": "4657:9:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 162,
+                        "name": "deposit",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 92,
+                        "src": "4668:7:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 163,
+                        "name": "tokenAddress",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 94,
+                        "src": "4677:12:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 164,
+                        "name": "startTime",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 96,
+                        "src": "4691:9:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 165,
+                        "name": "stopTime",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 98,
+                        "src": "4702:8:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 157,
+                      "name": "CreateSealedStream",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 78,
+                      "src": "4616:18:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_uint256_$_t_address_$_t_address_$_t_uint256_$_t_address_$_t_uint256_$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256,address,address,uint256,address,uint256,uint256)"
+                      }
+                    },
+                    "id": 166,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "4616:95:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 167,
+                  "nodeType": "EmitStatement",
+                  "src": "4611:100:1"
                 }
               ]
             },
             "documentation": "@notice Creates a stream on Sablier on behalf of the real user.\n@dev Throws if the contract is not allowed to transfer enough tokens from msg.sender.\n Throws if approval of tokens for Sablier contract fails\n See function \"createStream\" in Sablier.sol for more details\n@param recipient The address towards which the money is streamed.\n@param deposit The amount of money to be streamed.\n@param tokenAddress The ERC20 token to use as streaming currency.\n@param startTime The unix timestamp for when the stream starts.\n@param stopTime The unix timestamp for when the stream stops.\n@return The uint256 id of the newly created stream.",
-            "id": 142,
+            "id": 169,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "createStream",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 83,
+              "id": 99,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 74,
+                  "id": 90,
                   "name": "recipient",
                   "nodeType": "VariableDeclaration",
-                  "scope": 142,
-                  "src": "2689:17:1",
+                  "scope": 169,
+                  "src": "3018:17:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1199,10 +1627,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 73,
+                    "id": 89,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2689:7:1",
+                    "src": "3018:7:1",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1214,11 +1642,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 76,
+                  "id": 92,
                   "name": "deposit",
                   "nodeType": "VariableDeclaration",
-                  "scope": 142,
-                  "src": "2708:15:1",
+                  "scope": 169,
+                  "src": "3037:15:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1226,10 +1654,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 75,
+                    "id": 91,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2708:7:1",
+                    "src": "3037:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1240,11 +1668,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 78,
+                  "id": 94,
                   "name": "tokenAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 142,
-                  "src": "2725:20:1",
+                  "scope": 169,
+                  "src": "3054:20:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1252,10 +1680,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 77,
+                    "id": 93,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2725:7:1",
+                    "src": "3054:7:1",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1267,11 +1695,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 80,
+                  "id": 96,
                   "name": "startTime",
                   "nodeType": "VariableDeclaration",
-                  "scope": 142,
-                  "src": "2747:17:1",
+                  "scope": 169,
+                  "src": "3076:17:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1279,10 +1707,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 79,
+                    "id": 95,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2747:7:1",
+                    "src": "3076:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1293,11 +1721,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 82,
+                  "id": 98,
                   "name": "stopTime",
                   "nodeType": "VariableDeclaration",
-                  "scope": 142,
-                  "src": "2766:16:1",
+                  "scope": 169,
+                  "src": "3095:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1305,10 +1733,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 81,
+                    "id": 97,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2766:7:1",
+                    "src": "3095:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1318,19 +1746,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2688:95:1"
+              "src": "3017:95:1"
             },
             "returnParameters": {
-              "id": 86,
+              "id": 102,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 85,
+                  "id": 101,
                   "name": "streamId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 142,
-                  "src": "2816:16:1",
+                  "scope": 169,
+                  "src": "3145:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1338,10 +1766,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 84,
+                    "id": 100,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2816:7:1",
+                    "src": "3145:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1351,29 +1779,29 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2815:18:1"
+              "src": "3144:18:1"
             },
-            "scope": 143,
-            "src": "2667:1589:1",
+            "scope": 170,
+            "src": "2996:1722:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 144,
-        "src": "1815:2443:1"
+        "scope": 171,
+        "src": "1815:2905:1"
       }
     ],
-    "src": "0:4259:1"
+    "src": "0:4721:1"
   },
   "legacyAST": {
     "absolutePath": "/home/michael/WebstormProjects/web3Inheritance/contracts/SealedSablier.sol",
     "exportedSymbols": {
       "SealedSablier": [
-        143
+        170
       ]
     },
-    "id": 144,
+    "id": 171,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -1391,8 +1819,8 @@
         "file": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "id": 59,
         "nodeType": "ImportDirective",
-        "scope": 144,
-        "sourceUnit": 1055,
+        "scope": 171,
+        "sourceUnit": 1082,
         "src": "25:56:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1402,8 +1830,8 @@
         "file": "./interfaces/IERC1620.sol",
         "id": 60,
         "nodeType": "ImportDirective",
-        "scope": 144,
-        "sourceUnit": 272,
+        "scope": 171,
+        "sourceUnit": 299,
         "src": "82:35:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1414,9 +1842,9 @@
         "contractKind": "contract",
         "documentation": "Workflow:\n1. User approves SealedSablier contract to spend desired amount of tokens\n2. User calls SealedSablier createStream() function. This function does in one transaction:\na) transfer amount of tokens approved previously to itself\nb) approve Sablier contract to spend tokens that are now owned by SealedSablier contract\nc) Also approve msg.sender to spend tokens (See below why this is necessary)\nd) calls createStream() on Sablier contract. Sablier contract does:\na) create stream where SealedSablier contract is the sender\nb) transfer previously approved tokens from SealedSablier contract to Sablier\nResult:\n- A new stream for recipient is created, with the SealedSablier contract as sender\n- Since the user is not the Sender he can not cancel or modify the stream anymore\nBenefits:\n- No risk of losing funds in temporary wallet due to browser/system crash or similar\n- No need to have the user transfer both ETH (to pay gas) and Token into temporary wallet to create\na stream\nRisk:\n- Sablier streams can be cancelled both by sender or recipient. When a stream is cancelled,\nremaining funds will be transferred back to the sender.\nIn this scenario the creator can not cancel the stream, but the receiver could still do it.\nThis means the funds will be sent back to the SealedSablier contract, where they will be\nlocked forever.\nTo enable the stream creator to salvage these returned funds I'm approving the sender to spend\nany funds that end up in this contract - See \"Escape hatch\" notice below.",
         "fullyImplemented": true,
-        "id": 143,
+        "id": 170,
         "linearizedBaseContracts": [
-          143
+          170
         ],
         "name": "SealedSablier",
         "nodeType": "ContractDefinition",
@@ -1426,7 +1854,7 @@
             "id": 62,
             "name": "Sablier",
             "nodeType": "VariableDeclaration",
-            "scope": 143,
+            "scope": 170,
             "src": "1845:22:1",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1449,27 +1877,234 @@
             "visibility": "public"
           },
           {
+            "anonymous": false,
+            "documentation": "@notice Emits when a sealed stream is successfully created.",
+            "id": 78,
+            "name": "CreateSealedStream",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 77,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 64,
+                  "indexed": true,
+                  "name": "streamId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 78,
+                  "src": "1991:24:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 63,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1991:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 66,
+                  "indexed": true,
+                  "name": "sender",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 78,
+                  "src": "2025:22:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 65,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2025:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 68,
+                  "indexed": true,
+                  "name": "recipient",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 78,
+                  "src": "2057:25:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 67,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2057:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 70,
+                  "indexed": false,
+                  "name": "deposit",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 78,
+                  "src": "2092:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 69,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2092:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 72,
+                  "indexed": false,
+                  "name": "tokenAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 78,
+                  "src": "2117:20:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 71,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2117:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 74,
+                  "indexed": false,
+                  "name": "startTime",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 78,
+                  "src": "2147:17:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 73,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2147:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 76,
+                  "indexed": false,
+                  "name": "stopTime",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 78,
+                  "src": "2174:16:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 75,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2174:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1981:215:1"
+            },
+            "src": "1957:240:1"
+          },
+          {
             "body": {
-              "id": 71,
+              "id": 87,
               "nodeType": "Block",
-              "src": "1911:35:1",
+              "src": "2240:35:1",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 69,
+                    "id": 85,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 67,
+                      "id": 83,
                       "name": "Sablier",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 62,
-                      "src": "1921:7:1",
+                      "src": "2250:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -1479,47 +2114,47 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 68,
+                      "id": 84,
                       "name": "_Sablier",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 64,
-                      "src": "1931:8:1",
+                      "referencedDeclaration": 80,
+                      "src": "2260:8:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "src": "1921:18:1",
+                    "src": "2250:18:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
                     }
                   },
-                  "id": 70,
+                  "id": 86,
                   "nodeType": "ExpressionStatement",
-                  "src": "1921:18:1"
+                  "src": "2250:18:1"
                 }
               ]
             },
             "documentation": null,
-            "id": 72,
+            "id": 88,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 65,
+              "id": 81,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 64,
+                  "id": 80,
                   "name": "_Sablier",
                   "nodeType": "VariableDeclaration",
-                  "scope": 72,
-                  "src": "1886:16:1",
+                  "scope": 88,
+                  "src": "2215:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1527,10 +2162,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 63,
+                    "id": 79,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1886:7:1",
+                    "src": "2215:7:1",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1541,25 +2176,25 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1885:18:1"
+              "src": "2214:18:1"
             },
             "returnParameters": {
-              "id": 66,
+              "id": 82,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1911:0:1"
+              "src": "2240:0:1"
             },
-            "scope": 143,
-            "src": "1874:72:1",
+            "scope": 170,
+            "src": "2203:72:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 141,
+              "id": 168,
               "nodeType": "Block",
-              "src": "2838:1418:1",
+              "src": "3167:1551:1",
               "statements": [
                 {
                   "expression": {
@@ -1572,18 +2207,18 @@
                             "argumentTypes": null,
                             "expression": {
                               "argumentTypes": null,
-                              "id": 92,
+                              "id": 108,
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1069,
-                              "src": "3099:3:1",
+                              "referencedDeclaration": 1096,
+                              "src": "3428:3:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
                                 "typeString": "msg"
                               }
                             },
-                            "id": 93,
+                            "id": 109,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -1591,7 +2226,7 @@
                             "memberName": "sender",
                             "nodeType": "MemberAccess",
                             "referencedDeclaration": null,
-                            "src": "3099:10:1",
+                            "src": "3428:10:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address_payable",
                               "typeString": "address payable"
@@ -1602,14 +2237,14 @@
                             "arguments": [
                               {
                                 "argumentTypes": null,
-                                "id": 95,
+                                "id": 111,
                                 "name": "this",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 1087,
-                                "src": "3119:4:1",
+                                "referencedDeclaration": 1114,
+                                "src": "3448:4:1",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_contract$_SealedSablier_$143",
+                                  "typeIdentifier": "t_contract$_SealedSablier_$170",
                                   "typeString": "contract SealedSablier"
                                 }
                               }
@@ -1617,24 +2252,24 @@
                             "expression": {
                               "argumentTypes": [
                                 {
-                                  "typeIdentifier": "t_contract$_SealedSablier_$143",
+                                  "typeIdentifier": "t_contract$_SealedSablier_$170",
                                   "typeString": "contract SealedSablier"
                                 }
                               ],
-                              "id": 94,
+                              "id": 110,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
                               "lValueRequested": false,
                               "nodeType": "ElementaryTypeNameExpression",
-                              "src": "3111:7:1",
+                              "src": "3440:7:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_type$_t_address_$",
                                 "typeString": "type(address)"
                               },
                               "typeName": "address"
                             },
-                            "id": 96,
+                            "id": 112,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -1642,7 +2277,7 @@
                             "lValueRequested": false,
                             "names": [],
                             "nodeType": "FunctionCall",
-                            "src": "3111:13:1",
+                            "src": "3440:13:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
                               "typeString": "address"
@@ -1650,12 +2285,12 @@
                           },
                           {
                             "argumentTypes": null,
-                            "id": 97,
+                            "id": 113,
                             "name": "deposit",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 76,
-                            "src": "3126:7:1",
+                            "referencedDeclaration": 92,
+                            "src": "3455:7:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -1682,12 +2317,12 @@
                             "arguments": [
                               {
                                 "argumentTypes": null,
-                                "id": 89,
+                                "id": 105,
                                 "name": "tokenAddress",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 78,
-                                "src": "3072:12:1",
+                                "referencedDeclaration": 94,
+                                "src": "3401:12:1",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_address",
                                   "typeString": "address"
@@ -1701,18 +2336,18 @@
                                   "typeString": "address"
                                 }
                               ],
-                              "id": 88,
+                              "id": 104,
                               "name": "IERC20",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1054,
-                              "src": "3065:6:1",
+                              "referencedDeclaration": 1081,
+                              "src": "3394:6:1",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_contract$_IERC20_$1054_$",
+                                "typeIdentifier": "t_type$_t_contract$_IERC20_$1081_$",
                                 "typeString": "type(contract IERC20)"
                               }
                             },
-                            "id": 90,
+                            "id": 106,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -1720,27 +2355,27 @@
                             "lValueRequested": false,
                             "names": [],
                             "nodeType": "FunctionCall",
-                            "src": "3065:20:1",
+                            "src": "3394:20:1",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_IERC20_$1054",
+                              "typeIdentifier": "t_contract$_IERC20_$1081",
                               "typeString": "contract IERC20"
                             }
                           },
-                          "id": 91,
+                          "id": 107,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "memberName": "transferFrom",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 1037,
-                          "src": "3065:33:1",
+                          "referencedDeclaration": 1064,
+                          "src": "3394:33:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$_t_bool_$",
                             "typeString": "function (address,address,uint256) external returns (bool)"
                           }
                         },
-                        "id": 98,
+                        "id": 114,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -1748,7 +2383,7 @@
                         "lValueRequested": false,
                         "names": [],
                         "nodeType": "FunctionCall",
-                        "src": "3065:69:1",
+                        "src": "3394:69:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -1757,14 +2392,14 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "6661696c656420746f207472616e7366657220746f6b656e7320746f205365616c65645361626c69657220636f6e7472616374",
-                        "id": 99,
+                        "id": 115,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "string",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "3148:53:1",
+                        "src": "3477:53:1",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_f75daf8eee08d28106b9603da5d33e17322bf5aaa11eb36a8f3ac3c19c45badd",
@@ -1784,21 +2419,21 @@
                           "typeString": "literal_string \"failed to transfer tokens to SealedSablier contract\""
                         }
                       ],
-                      "id": 87,
+                      "id": 103,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1072,
-                        1073
+                        1099,
+                        1100
                       ],
-                      "referencedDeclaration": 1073,
-                      "src": "3044:7:1",
+                      "referencedDeclaration": 1100,
+                      "src": "3373:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 100,
+                    "id": 116,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1806,15 +2441,15 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "3044:167:1",
+                    "src": "3373:167:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 101,
+                  "id": 117,
                   "nodeType": "ExpressionStatement",
-                  "src": "3044:167:1"
+                  "src": "3373:167:1"
                 },
                 {
                   "expression": {
@@ -1825,12 +2460,12 @@
                         "arguments": [
                           {
                             "argumentTypes": null,
-                            "id": 107,
+                            "id": 123,
                             "name": "Sablier",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 62,
-                            "src": "3322:7:1",
+                            "src": "3651:7:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
                               "typeString": "address"
@@ -1838,12 +2473,12 @@
                           },
                           {
                             "argumentTypes": null,
-                            "id": 108,
+                            "id": 124,
                             "name": "deposit",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 76,
-                            "src": "3331:7:1",
+                            "referencedDeclaration": 92,
+                            "src": "3660:7:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -1866,12 +2501,12 @@
                             "arguments": [
                               {
                                 "argumentTypes": null,
-                                "id": 104,
+                                "id": 120,
                                 "name": "tokenAddress",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 78,
-                                "src": "3300:12:1",
+                                "referencedDeclaration": 94,
+                                "src": "3629:12:1",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_address",
                                   "typeString": "address"
@@ -1885,18 +2520,18 @@
                                   "typeString": "address"
                                 }
                               ],
-                              "id": 103,
+                              "id": 119,
                               "name": "IERC20",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1054,
-                              "src": "3293:6:1",
+                              "referencedDeclaration": 1081,
+                              "src": "3622:6:1",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_contract$_IERC20_$1054_$",
+                                "typeIdentifier": "t_type$_t_contract$_IERC20_$1081_$",
                                 "typeString": "type(contract IERC20)"
                               }
                             },
-                            "id": 105,
+                            "id": 121,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -1904,27 +2539,27 @@
                             "lValueRequested": false,
                             "names": [],
                             "nodeType": "FunctionCall",
-                            "src": "3293:20:1",
+                            "src": "3622:20:1",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_IERC20_$1054",
+                              "typeIdentifier": "t_contract$_IERC20_$1081",
                               "typeString": "contract IERC20"
                             }
                           },
-                          "id": 106,
+                          "id": 122,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "memberName": "approve",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 1026,
-                          "src": "3293:28:1",
+                          "referencedDeclaration": 1053,
+                          "src": "3622:28:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
                             "typeString": "function (address,uint256) external returns (bool)"
                           }
                         },
-                        "id": 109,
+                        "id": 125,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -1932,7 +2567,7 @@
                         "lValueRequested": false,
                         "names": [],
                         "nodeType": "FunctionCall",
-                        "src": "3293:46:1",
+                        "src": "3622:46:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -1941,14 +2576,14 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "6661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f205361626c696572",
-                        "id": 110,
+                        "id": 126,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "string",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "3353:65:1",
+                        "src": "3682:65:1",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_e3ce1eb0d2870cfa2cbac7bcda6e7750a6e0eefe717d596036a8c97b3f37b988",
@@ -1968,21 +2603,21 @@
                           "typeString": "literal_string \"failed to approve tokens from SealedSablier contract to Sablier\""
                         }
                       ],
-                      "id": 102,
+                      "id": 118,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1072,
-                        1073
+                        1099,
+                        1100
                       ],
-                      "referencedDeclaration": 1073,
-                      "src": "3285:7:1",
+                      "referencedDeclaration": 1100,
+                      "src": "3614:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 111,
+                    "id": 127,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1990,15 +2625,15 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "3285:143:1",
+                    "src": "3614:143:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 112,
+                  "id": 128,
                   "nodeType": "ExpressionStatement",
-                  "src": "3285:143:1"
+                  "src": "3614:143:1"
                 },
                 {
                   "expression": {
@@ -2011,18 +2646,18 @@
                             "argumentTypes": null,
                             "expression": {
                               "argumentTypes": null,
-                              "id": 118,
+                              "id": 134,
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1069,
-                              "src": "3960:3:1",
+                              "referencedDeclaration": 1096,
+                              "src": "4289:3:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
                                 "typeString": "msg"
                               }
                             },
-                            "id": 119,
+                            "id": 135,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -2030,7 +2665,7 @@
                             "memberName": "sender",
                             "nodeType": "MemberAccess",
                             "referencedDeclaration": null,
-                            "src": "3960:10:1",
+                            "src": "4289:10:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address_payable",
                               "typeString": "address payable"
@@ -2038,7 +2673,7 @@
                           },
                           {
                             "argumentTypes": null,
-                            "id": 123,
+                            "id": 139,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -2046,21 +2681,21 @@
                             "nodeType": "UnaryOperation",
                             "operator": "~",
                             "prefix": true,
-                            "src": "3972:11:1",
+                            "src": "4301:11:1",
                             "subExpression": {
                               "argumentTypes": null,
                               "arguments": [
                                 {
                                   "argumentTypes": null,
                                   "hexValue": "30",
-                                  "id": 121,
+                                  "id": 137,
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": true,
                                   "kind": "number",
                                   "lValueRequested": false,
                                   "nodeType": "Literal",
-                                  "src": "3981:1:1",
+                                  "src": "4310:1:1",
                                   "subdenomination": null,
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_rational_0_by_1",
@@ -2076,20 +2711,20 @@
                                     "typeString": "int_const 0"
                                   }
                                 ],
-                                "id": 120,
+                                "id": 136,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": true,
                                 "lValueRequested": false,
                                 "nodeType": "ElementaryTypeNameExpression",
-                                "src": "3973:7:1",
+                                "src": "4302:7:1",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_type$_t_uint256_$",
                                   "typeString": "type(uint256)"
                                 },
                                 "typeName": "uint256"
                               },
-                              "id": 122,
+                              "id": 138,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
@@ -2097,7 +2732,7 @@
                               "lValueRequested": false,
                               "names": [],
                               "nodeType": "FunctionCall",
-                              "src": "3973:10:1",
+                              "src": "4302:10:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_uint256",
                                 "typeString": "uint256"
@@ -2125,12 +2760,12 @@
                             "arguments": [
                               {
                                 "argumentTypes": null,
-                                "id": 115,
+                                "id": 131,
                                 "name": "tokenAddress",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 78,
-                                "src": "3938:12:1",
+                                "referencedDeclaration": 94,
+                                "src": "4267:12:1",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_address",
                                   "typeString": "address"
@@ -2144,18 +2779,18 @@
                                   "typeString": "address"
                                 }
                               ],
-                              "id": 114,
+                              "id": 130,
                               "name": "IERC20",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1054,
-                              "src": "3931:6:1",
+                              "referencedDeclaration": 1081,
+                              "src": "4260:6:1",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_contract$_IERC20_$1054_$",
+                                "typeIdentifier": "t_type$_t_contract$_IERC20_$1081_$",
                                 "typeString": "type(contract IERC20)"
                               }
                             },
-                            "id": 116,
+                            "id": 132,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -2163,27 +2798,27 @@
                             "lValueRequested": false,
                             "names": [],
                             "nodeType": "FunctionCall",
-                            "src": "3931:20:1",
+                            "src": "4260:20:1",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_IERC20_$1054",
+                              "typeIdentifier": "t_contract$_IERC20_$1081",
                               "typeString": "contract IERC20"
                             }
                           },
-                          "id": 117,
+                          "id": 133,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "memberName": "approve",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 1026,
-                          "src": "3931:28:1",
+                          "referencedDeclaration": 1053,
+                          "src": "4260:28:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
                             "typeString": "function (address,uint256) external returns (bool)"
                           }
                         },
-                        "id": 124,
+                        "id": 140,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -2191,7 +2826,7 @@
                         "lValueRequested": false,
                         "names": [],
                         "nodeType": "FunctionCall",
-                        "src": "3931:53:1",
+                        "src": "4260:53:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -2200,14 +2835,14 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "6661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f2043726561746f72",
-                        "id": 125,
+                        "id": 141,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "string",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "3998:65:1",
+                        "src": "4327:65:1",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_f0883016df38a016a743bfc96167b5cb4905b377d7f4b2cf226d1d10b1c618e7",
@@ -2227,21 +2862,21 @@
                           "typeString": "literal_string \"failed to approve tokens from SealedSablier contract to Creator\""
                         }
                       ],
-                      "id": 113,
+                      "id": 129,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1072,
-                        1073
+                        1099,
+                        1100
                       ],
-                      "referencedDeclaration": 1073,
-                      "src": "3923:7:1",
+                      "referencedDeclaration": 1100,
+                      "src": "4252:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 126,
+                    "id": 142,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2249,32 +2884,32 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "3923:150:1",
+                    "src": "4252:150:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 127,
+                  "id": 143,
                   "nodeType": "ExpressionStatement",
-                  "src": "3923:150:1"
+                  "src": "4252:150:1"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 139,
+                    "id": 155,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 128,
+                      "id": 144,
                       "name": "streamId",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 85,
-                      "src": "4153:8:1",
+                      "referencedDeclaration": 101,
+                      "src": "4482:8:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -2287,12 +2922,12 @@
                       "arguments": [
                         {
                           "argumentTypes": null,
-                          "id": 133,
+                          "id": 149,
                           "name": "recipient",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 74,
-                          "src": "4195:9:1",
+                          "referencedDeclaration": 90,
+                          "src": "4524:9:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -2300,12 +2935,12 @@
                         },
                         {
                           "argumentTypes": null,
-                          "id": 134,
+                          "id": 150,
                           "name": "deposit",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 76,
-                          "src": "4206:7:1",
+                          "referencedDeclaration": 92,
+                          "src": "4535:7:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -2313,12 +2948,12 @@
                         },
                         {
                           "argumentTypes": null,
-                          "id": 135,
+                          "id": 151,
                           "name": "tokenAddress",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 78,
-                          "src": "4215:12:1",
+                          "referencedDeclaration": 94,
+                          "src": "4544:12:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -2326,12 +2961,12 @@
                         },
                         {
                           "argumentTypes": null,
-                          "id": 136,
+                          "id": 152,
                           "name": "startTime",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 80,
-                          "src": "4229:9:1",
+                          "referencedDeclaration": 96,
+                          "src": "4558:9:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -2339,12 +2974,12 @@
                         },
                         {
                           "argumentTypes": null,
-                          "id": 137,
+                          "id": 153,
                           "name": "stopTime",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 82,
-                          "src": "4240:8:1",
+                          "referencedDeclaration": 98,
+                          "src": "4569:8:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -2379,12 +3014,12 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "id": 130,
+                              "id": 146,
                               "name": "Sablier",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
                               "referencedDeclaration": 62,
-                              "src": "4173:7:1",
+                              "src": "4502:7:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_address",
                                 "typeString": "address"
@@ -2398,18 +3033,18 @@
                                 "typeString": "address"
                               }
                             ],
-                            "id": 129,
+                            "id": 145,
                             "name": "IERC1620",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 271,
-                            "src": "4164:8:1",
+                            "referencedDeclaration": 298,
+                            "src": "4493:8:1",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_type$_t_contract$_IERC1620_$271_$",
+                              "typeIdentifier": "t_type$_t_contract$_IERC1620_$298_$",
                               "typeString": "type(contract IERC1620)"
                             }
                           },
-                          "id": 131,
+                          "id": 147,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2417,27 +3052,27 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "4164:17:1",
+                          "src": "4493:17:1",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_IERC1620_$271",
+                            "typeIdentifier": "t_contract$_IERC1620_$298",
                             "typeString": "contract IERC1620"
                           }
                         },
-                        "id": 132,
+                        "id": 148,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "memberName": "createStream",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 254,
-                        "src": "4164:30:1",
+                        "referencedDeclaration": 281,
+                        "src": "4493:30:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$_t_address_$_t_uint256_$_t_uint256_$returns$_t_uint256_$",
                           "typeString": "function (address,uint256,address,uint256,uint256) external returns (uint256)"
                         }
                       },
-                      "id": 138,
+                      "id": 154,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -2445,42 +3080,214 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "4164:85:1",
+                      "src": "4493:85:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "4153:96:1",
+                    "src": "4482:96:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 140,
+                  "id": 156,
                   "nodeType": "ExpressionStatement",
-                  "src": "4153:96:1"
+                  "src": "4482:96:1"
+                },
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 158,
+                        "name": "streamId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 101,
+                        "src": "4635:8:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 159,
+                          "name": "msg",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1096,
+                          "src": "4645:3:1",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_message",
+                            "typeString": "msg"
+                          }
+                        },
+                        "id": 160,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "sender",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "4645:10:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 161,
+                        "name": "recipient",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 90,
+                        "src": "4657:9:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 162,
+                        "name": "deposit",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 92,
+                        "src": "4668:7:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 163,
+                        "name": "tokenAddress",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 94,
+                        "src": "4677:12:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 164,
+                        "name": "startTime",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 96,
+                        "src": "4691:9:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 165,
+                        "name": "stopTime",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 98,
+                        "src": "4702:8:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 157,
+                      "name": "CreateSealedStream",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 78,
+                      "src": "4616:18:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_uint256_$_t_address_$_t_address_$_t_uint256_$_t_address_$_t_uint256_$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256,address,address,uint256,address,uint256,uint256)"
+                      }
+                    },
+                    "id": 166,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "4616:95:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 167,
+                  "nodeType": "EmitStatement",
+                  "src": "4611:100:1"
                 }
               ]
             },
             "documentation": "@notice Creates a stream on Sablier on behalf of the real user.\n@dev Throws if the contract is not allowed to transfer enough tokens from msg.sender.\n Throws if approval of tokens for Sablier contract fails\n See function \"createStream\" in Sablier.sol for more details\n@param recipient The address towards which the money is streamed.\n@param deposit The amount of money to be streamed.\n@param tokenAddress The ERC20 token to use as streaming currency.\n@param startTime The unix timestamp for when the stream starts.\n@param stopTime The unix timestamp for when the stream stops.\n@return The uint256 id of the newly created stream.",
-            "id": 142,
+            "id": 169,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "createStream",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 83,
+              "id": 99,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 74,
+                  "id": 90,
                   "name": "recipient",
                   "nodeType": "VariableDeclaration",
-                  "scope": 142,
-                  "src": "2689:17:1",
+                  "scope": 169,
+                  "src": "3018:17:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2488,10 +3295,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 73,
+                    "id": 89,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2689:7:1",
+                    "src": "3018:7:1",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -2503,11 +3310,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 76,
+                  "id": 92,
                   "name": "deposit",
                   "nodeType": "VariableDeclaration",
-                  "scope": 142,
-                  "src": "2708:15:1",
+                  "scope": 169,
+                  "src": "3037:15:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2515,10 +3322,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 75,
+                    "id": 91,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2708:7:1",
+                    "src": "3037:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2529,11 +3336,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 78,
+                  "id": 94,
                   "name": "tokenAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 142,
-                  "src": "2725:20:1",
+                  "scope": 169,
+                  "src": "3054:20:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2541,10 +3348,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 77,
+                    "id": 93,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2725:7:1",
+                    "src": "3054:7:1",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -2556,11 +3363,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 80,
+                  "id": 96,
                   "name": "startTime",
                   "nodeType": "VariableDeclaration",
-                  "scope": 142,
-                  "src": "2747:17:1",
+                  "scope": 169,
+                  "src": "3076:17:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2568,10 +3375,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 79,
+                    "id": 95,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2747:7:1",
+                    "src": "3076:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2582,11 +3389,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 82,
+                  "id": 98,
                   "name": "stopTime",
                   "nodeType": "VariableDeclaration",
-                  "scope": 142,
-                  "src": "2766:16:1",
+                  "scope": 169,
+                  "src": "3095:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2594,10 +3401,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 81,
+                    "id": 97,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2766:7:1",
+                    "src": "3095:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2607,19 +3414,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2688:95:1"
+              "src": "3017:95:1"
             },
             "returnParameters": {
-              "id": 86,
+              "id": 102,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 85,
+                  "id": 101,
                   "name": "streamId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 142,
-                  "src": "2816:16:1",
+                  "scope": 169,
+                  "src": "3145:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2627,10 +3434,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 84,
+                    "id": 100,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2816:7:1",
+                    "src": "3145:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2640,20 +3447,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2815:18:1"
+              "src": "3144:18:1"
             },
-            "scope": 143,
-            "src": "2667:1589:1",
+            "scope": 170,
+            "src": "2996:1722:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 144,
-        "src": "1815:2443:1"
+        "scope": 171,
+        "src": "1815:2905:1"
       }
     ],
-    "src": "0:4259:1"
+    "src": "0:4721:1"
   },
   "compiler": {
     "name": "solc",
@@ -2683,10 +3490,352 @@
       "links": {},
       "address": "0xd81F53b142424dF1E0Bf18E1b2A8933B4DC46801",
       "transactionHash": "0x0019c1c3b4582217ca29ef3923604c195ac58426ac46515c9d93d18da29f2112"
+    },
+    "5777": {
+      "events": {
+        "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "streamId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "deposit",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "startTime",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "stopTime",
+              "type": "uint256"
+            }
+          ],
+          "name": "CreateSealedStream",
+          "type": "event",
+          "signature": "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8"
+        }
+      },
+      "links": {},
+      "address": "0x22C6b3a4319F32099f28007A6888EFb1ac24FeEC",
+      "transactionHash": "0x0b0eee6c26e3964b11c4ddda801b3fd15175b1b50ff95ad1a19325a54cbfcc9f"
+    },
+    "1580138388563": {
+      "events": {
+        "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "streamId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "deposit",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "startTime",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "stopTime",
+              "type": "uint256"
+            }
+          ],
+          "name": "CreateSealedStream",
+          "type": "event",
+          "signature": "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8"
+        }
+      },
+      "links": {},
+      "address": "0xD833215cBcc3f914bD1C9ece3EE7BF8B14f841bb",
+      "transactionHash": "0x972c44a45054ef7c5487082dcc90ba476f11a8483f84d36cb8264619adad2cdf"
+    },
+    "1580139349652": {
+      "events": {
+        "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "streamId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "deposit",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "startTime",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "stopTime",
+              "type": "uint256"
+            }
+          ],
+          "name": "CreateSealedStream",
+          "type": "event",
+          "signature": "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8"
+        }
+      },
+      "links": {},
+      "address": "0xD833215cBcc3f914bD1C9ece3EE7BF8B14f841bb",
+      "transactionHash": "0x972c44a45054ef7c5487082dcc90ba476f11a8483f84d36cb8264619adad2cdf"
+    },
+    "1580221571503": {
+      "events": {
+        "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "streamId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "deposit",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "startTime",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "stopTime",
+              "type": "uint256"
+            }
+          ],
+          "name": "CreateSealedStream",
+          "type": "event",
+          "signature": "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8"
+        }
+      },
+      "links": {},
+      "address": "0x9561C133DD8580860B6b7E504bC5Aa500f0f06a7",
+      "transactionHash": "0xd1fd4ed22658cf807d496b6e07830cdd251ff4120c853f8b168235241774a952"
+    },
+    "1580223121246": {
+      "events": {
+        "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "streamId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "deposit",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "startTime",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "stopTime",
+              "type": "uint256"
+            }
+          ],
+          "name": "CreateSealedStream",
+          "type": "event",
+          "signature": "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8"
+        }
+      },
+      "links": {},
+      "address": "0x9561C133DD8580860B6b7E504bC5Aa500f0f06a7",
+      "transactionHash": "0xd1fd4ed22658cf807d496b6e07830cdd251ff4120c853f8b168235241774a952"
+    },
+    "1580225833195": {
+      "events": {
+        "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "streamId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "deposit",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "startTime",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "stopTime",
+              "type": "uint256"
+            }
+          ],
+          "name": "CreateSealedStream",
+          "type": "event",
+          "signature": "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8"
+        }
+      },
+      "links": {},
+      "address": "0x85A16cF0Bb868F49AcE0Bbd5Ddc33e6e0d606ae8",
+      "transactionHash": "0x59df402b011615506de84a7d4b42e48674b5d590d007828b87d1a872d6f5e6fa"
     }
   },
   "schemaVersion": "3.0.20",
-  "updatedAt": "2020-01-20T12:54:39.413Z",
+  "updatedAt": "2020-01-28T15:40:15.684Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {

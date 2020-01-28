@@ -37,6 +37,19 @@ contract SealedSablier {
 
     address public Sablier;
 
+    /**
+     * @notice Emits when a sealed stream is successfully created.
+     */
+    event CreateSealedStream(
+        uint256 indexed streamId,
+        address indexed sender,
+        address indexed recipient,
+        uint256 deposit,
+        address tokenAddress,
+        uint256 startTime,
+        uint256 stopTime
+    );
+
     constructor(address _Sablier) public {
         Sablier = _Sablier;
     }
@@ -81,5 +94,8 @@ contract SealedSablier {
 
         // create stream on Sablier contract and return the streamID
         streamId = IERC1620(Sablier).createStream(recipient, deposit, tokenAddress, startTime, stopTime);
+
+        // emit event
+        emit CreateSealedStream(streamId, msg.sender, recipient, deposit, tokenAddress, startTime, stopTime);
     }
 }
