@@ -9,12 +9,12 @@ import BalanceProgress from './BalanceProgress'
 StreamDetails.propTypes = {
     loading: PropTypes.bool.isRequired,
     streamId: PropTypes.string.isRequired,
-    streamDetails: PropTypes.object.isRequired,
-    web3: PropTypes.object.isRequired,
     withdrawing: PropTypes.bool.isRequired,
     withdraw: PropTypes.func.isRequired,
     account: PropTypes.string.isRequired,
-    token: PropTypes.object.isRequired,
+    web3: PropTypes.object,
+    streamDetails: PropTypes.object,
+    token: PropTypes.object,
 }
 
 function StreamDetails({loading, streamId, streamDetails, web3, withdraw, withdrawing, account, token}) {

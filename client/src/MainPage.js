@@ -34,7 +34,7 @@ function MainPage({web3, sealedSablierContractInstance, ERC1620ContractInstance,
                 <Icon name='right arrow' />
             </Button>
             <Button primary size='massive' onClick={()=>{setOpen(3)}}>
-                Show incoming streams
+                Show your streams
                 <Icon name='right arrow' />
             </Button>
         </React.Fragment>
