@@ -1,5 +1,7 @@
 const SealedSablierContract = artifacts.require("./SealedSablier.sol");
 const ERC20Mock = artifacts.require("./ERC20Mock.sol")
+const assert = require("chai").assert;
+const truffleAssert = require('truffle-assertions');
 
 
 /* global web3 */
@@ -105,6 +107,12 @@ contract("SealeadSablier", function(accounts) {
     assert.deepEqual(decoded.tokenAddress, erc20mock.address, "Wrong token address")
     assert.deepEqual(decoded.startTime, startTime.toString())
     assert.deepEqual(decoded.stopTime, stopTime.toString())
+
+    // Verify CreateSealedStream event. Should be similar to "CreateStream" event, but with the real sender address
+    truffleAssert.eventEmitted(result, 'CreateSealedStream', {
+      sender: sender,
+      recipient: receiver,
+    });
 
     // SealedSablier contract should not have any balance after stream is created
     let contractBalance = await erc20mock.balanceOf(sealedSablier.address)
