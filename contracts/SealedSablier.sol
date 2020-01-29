@@ -94,8 +94,6 @@ contract SealedSablier {
 
         // create stream on Sablier contract and return the streamID
         streamId = IERC1620(Sablier).createStream(recipient, deposit, tokenAddress, startTime, stopTime);
-
-        // emit event
         emit CreateSealedStream(streamId, msg.sender, recipient, deposit, tokenAddress, startTime, stopTime);
     }
 }
