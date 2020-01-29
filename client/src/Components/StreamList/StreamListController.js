@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
-import {Button, Header, Icon, List, Message} from 'semantic-ui-react'
+import {Button, Header, Icon, Message} from 'semantic-ui-react'
 import StreamList from './StreamList'
 
 
-RecipientForm.propTypes = {
+StreamListController.propTypes = {
     account: PropTypes.string.isRequired,
     sealedSablierInstance: PropTypes.object.isRequired,
     goBack: PropTypes.func.isRequired,
 }
 
-function RecipientForm({account, sealedSablierInstance, goBack}) {
+function StreamListController({account, sealedSablierInstance, goBack}) {
 
     const [loadingEvents, setLoadingEvents] = useState(true)
     const [incomingStreams, setIncomingStreams] = useState([])
@@ -86,4 +86,4 @@ function RecipientForm({account, sealedSablierInstance, goBack}) {
     )
 }
 
-export default RecipientForm
+export default StreamListController

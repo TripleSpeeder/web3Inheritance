@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {Button, Icon, Message, Modal} from 'semantic-ui-react'
 import StreamForm from './PrepareForm/StreamForm'
 import CreateFormContainer from './CreateForm/CreateFormContainer'
-import RecipientForm from './RecipientForm/RecipientForm'
+import StreamListController from './StreamList/StreamListController'
 
 
 const StreamModal = ({web3, open, handleClose, initialPhase, sealedSablierContractInstance, ERC1620ContractInstance, availableTokens}) => {
@@ -128,7 +128,7 @@ const StreamModal = ({web3, open, handleClose, initialPhase, sealedSablierContra
         />
     }
     else if (phase === 3) {
-        content = <RecipientForm
+        content = <StreamListController
             account={account}
             web3={web3}
             sealedSablierInstance={sealedSablierContractInstance}
