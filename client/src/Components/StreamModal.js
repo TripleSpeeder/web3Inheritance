@@ -39,7 +39,7 @@ const StreamModal = ({web3, open, handleClose, initialPhase, sealedSablierContra
         setPhase(2)
     }
 
-    let content
+    let content, headline
 
     // Got account?
     if (account === '') {
@@ -106,6 +106,7 @@ const StreamModal = ({web3, open, handleClose, initialPhase, sealedSablierContra
         </Message>
     }
     else if (phase===1) {
+        headline = 'Set up your heritage stream'
         content = <StreamForm
             web3={web3}
             createForm={onCreateStream}
@@ -115,6 +116,7 @@ const StreamModal = ({web3, open, handleClose, initialPhase, sealedSablierContra
         />
     }
     else if (phase === 2) {
+        headline = 'Set up your heritage stream'
         content = <CreateFormContainer
             web3={web3}
             token={streamOptions.token}
@@ -128,6 +130,7 @@ const StreamModal = ({web3, open, handleClose, initialPhase, sealedSablierContra
         />
     }
     else if (phase === 3) {
+        headline = 'Your heritage streams'
         content = <StreamListController
             account={account}
             web3={web3}
@@ -142,7 +145,7 @@ const StreamModal = ({web3, open, handleClose, initialPhase, sealedSablierContra
             size={'large'}
         >
             <Modal.Header>
-                Set up your heritage stream
+                {headline}
             </Modal.Header>
             <Modal.Content>
                 {content}
