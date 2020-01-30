@@ -119,12 +119,12 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.11+commit.c082d0b4\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"deposit\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"tokenAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"stopTime\",\"type\":\"uint256\"}],\"name\":\"createStream\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"streamId\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"Sablier\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_Sablier\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"streamId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"deposit\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"stopTime\",\"type\":\"uint256\"}],\"name\":\"CreateSealedStream\",\"type\":\"event\"}],\"devdoc\":{\"methods\":{\"createStream(address,uint256,address,uint256,uint256)\":{\"details\":\"Throws if the contract is not allowed to transfer enough tokens from msg.sender. Throws if approval of tokens for Sablier contract fails See function \\\"createStream\\\" in Sablier.sol for more details\",\"params\":{\"deposit\":\"The amount of money to be streamed.\",\"recipient\":\"The address towards which the money is streamed.\",\"startTime\":\"The unix timestamp for when the stream starts.\",\"stopTime\":\"The unix timestamp for when the stream stops.\",\"tokenAddress\":\"The ERC20 token to use as streaming currency.\"},\"return\":\"The uint256 id of the newly created stream.\"}}},\"userdoc\":{\"methods\":{\"createStream(address,uint256,address,uint256,uint256)\":{\"notice\":\"Creates a stream on Sablier on behalf of the real user.\"}},\"notice\":\"Workflow: 1. User approves SealedSablier contract to spend desired amount of tokens 2. User calls SealedSablier createStream() function. This function does in one transaction: a) transfer amount of tokens approved previously to itself b) approve Sablier contract to spend tokens that are now owned by SealedSablier contract c) Also approve msg.sender to spend tokens (See below why this is necessary) d) calls createStream() on Sablier contract. Sablier contract does: a) create stream where SealedSablier contract is the sender b) transfer previously approved tokens from SealedSablier contract to Sablier Result: - A new stream for recipient is created, with the SealedSablier contract as sender - Since the user is not the Sender he can not cancel or modify the stream anymore Benefits: - No risk of losing funds in temporary wallet due to browser/system crash or similar - No need to have the user transfer both ETH (to pay gas) and Token into temporary wallet to create a stream Risk: - Sablier streams can be cancelled both by sender or recipient. When a stream is cancelled, remaining funds will be transferred back to the sender. In this scenario the creator can not cancel the stream, but the receiver could still do it. This means the funds will be sent back to the SealedSablier contract, where they will be locked forever. To enable the stream creator to salvage these returned funds I'm approving the sender to spend any funds that end up in this contract - See \\\"Escape hatch\\\" notice below.\"}},\"settings\":{\"compilationTarget\":{\"/home/michael/WebstormProjects/web3Inheritance/contracts/SealedSablier.sol\":\"SealedSablier\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/michael/WebstormProjects/web3Inheritance/contracts/SealedSablier.sol\":{\"keccak256\":\"0x443e2aa21c5cd6d1b5e5fb78903df291930ab9aee13222109a5dd872c9792c62\",\"urls\":[\"bzz-raw://0728ecc787633650f0510290d6a24cfb361f5a35e83b4e880d2ee44d1ebdda8a\",\"dweb:/ipfs/QmTfAWDcGRvdPPNuzRzrnAoZLs41qvBYC7VHCSbBUgjAXB\"]},\"/home/michael/WebstormProjects/web3Inheritance/contracts/interfaces/IERC1620.sol\":{\"keccak256\":\"0xf9969d5b243cc70b976281ba682fc0189c182eb0e57dba3969dc754b7413b934\",\"urls\":[\"bzz-raw://6695d8482830c00d23023dafa0ff8b8b15c8b10720596bd25207e33b222a3030\",\"dweb:/ipfs/QmNSfN3vdHf2TWygXraSjjQbuT5svyYtWeW2n469rmgdFU\"]},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xe5bb0f57cff3e299f360052ba50f1ea0fff046df2be070b6943e0e3c3fdad8a9\",\"urls\":[\"bzz-raw://59fd025151435da35faa8093a5c7a17de02de9d08ad27275c5cdf05050820d91\",\"dweb:/ipfs/QmQMvwEcPhoRXzbXyrdoeRtvLoifUW9Qh7Luho7bmUPRkc\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b506040516108343803806108348339818101604052602081101561003357600080fd5b8101908080519060200190929190505050806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550506107a0806100946000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063cc1b4bf61461003b578063d1ecf20c146100d1575b600080fd5b6100bb600480360360a081101561005157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291908035906020019092919050505061011b565b6040518082815260200191505060405180910390f35b6100d9610695565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008373ffffffffffffffffffffffffffffffffffffffff166323b872dd3330886040518463ffffffff1660e01b8152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019350505050602060405180830381600087803b1580156101d857600080fd5b505af11580156101ec573d6000803e3d6000fd5b505050506040513d602081101561020257600080fd5b8101908080519060200190929190505050610268576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260338152602001806107396033913960400191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff1663095ea7b36000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff16876040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561031057600080fd5b505af1158015610324573d6000803e3d6000fd5b505050506040513d602081101561033a57600080fd5b81019080805190602001909291905050506103a0576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603f8152602001806106bb603f913960400191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff1663095ea7b3336000196040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561042957600080fd5b505af115801561043d573d6000803e3d6000fd5b505050506040513d602081101561045357600080fd5b81019080805190602001909291905050506104b9576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603f8152602001806106fa603f913960400191505060405180910390fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663cc1b4bf687878787876040518663ffffffff1660e01b8152600401808673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018581526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200182815260200195505050505050602060405180830381600087803b1580156105a557600080fd5b505af11580156105b9573d6000803e3d6000fd5b505050506040513d60208110156105cf57600080fd5b810190808051906020019092919050505090508573ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16827fca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce888888888604051808581526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200182815260200194505050505060405180910390a495945050505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fe6661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f205361626c6965726661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f2043726561746f726661696c656420746f207472616e7366657220746f6b656e7320746f205365616c65645361626c69657220636f6e7472616374a265627a7a72315820655fa5366216ec81342f0f55ef3b27c3ad2a1622cbc0612a6168283da9ff0ed264736f6c634300050b0032",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c8063cc1b4bf61461003b578063d1ecf20c146100d1575b600080fd5b6100bb600480360360a081101561005157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291908035906020019092919050505061011b565b6040518082815260200191505060405180910390f35b6100d9610695565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008373ffffffffffffffffffffffffffffffffffffffff166323b872dd3330886040518463ffffffff1660e01b8152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019350505050602060405180830381600087803b1580156101d857600080fd5b505af11580156101ec573d6000803e3d6000fd5b505050506040513d602081101561020257600080fd5b8101908080519060200190929190505050610268576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260338152602001806107396033913960400191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff1663095ea7b36000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff16876040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561031057600080fd5b505af1158015610324573d6000803e3d6000fd5b505050506040513d602081101561033a57600080fd5b81019080805190602001909291905050506103a0576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603f8152602001806106bb603f913960400191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff1663095ea7b3336000196040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561042957600080fd5b505af115801561043d573d6000803e3d6000fd5b505050506040513d602081101561045357600080fd5b81019080805190602001909291905050506104b9576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603f8152602001806106fa603f913960400191505060405180910390fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663cc1b4bf687878787876040518663ffffffff1660e01b8152600401808673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018581526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200182815260200195505050505050602060405180830381600087803b1580156105a557600080fd5b505af11580156105b9573d6000803e3d6000fd5b505050506040513d60208110156105cf57600080fd5b810190808051906020019092919050505090508573ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16827fca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce888888888604051808581526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200182815260200194505050505060405180910390a495945050505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fe6661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f205361626c6965726661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f2043726561746f726661696c656420746f207472616e7366657220746f6b656e7320746f205365616c65645361626c69657220636f6e7472616374a265627a7a72315820655fa5366216ec81342f0f55ef3b27c3ad2a1622cbc0612a6168283da9ff0ed264736f6c634300050b0032",
-  "sourceMap": "1815:2882:1:-;;;2203:72;8:9:-1;5:2;;;30:1;27;20:12;5:2;2203:72:1;;;;;;;;;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;2203:72:1;;;;;;;;;;;;;;;;2260:8;2250:7;;:18;;;;;;;;;;;;;;;;;;2203:72;1815:2882;;;;;;",
-  "deployedSourceMap": "1815:2882:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1815:2882:1;;;;;;;;;;;;;;;;;;;;;;;;2996:1699;;;;;;13:3:-1;8;5:12;2:2;;;30:1;27;20:12;2:2;2996:1699:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;1845:22;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;2996:1699;3145:16;3401:12;3394:33;;;3428:10;3448:4;3455:7;3394:69;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;3394:69:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;3394:69:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;3394:69:1;;;;;;;;;;;;;;;;3373:167;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3629:12;3622:28;;;3651:7;;;;;;;;;;;3660;3622:46;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;3622:46:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;3622:46:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;3622:46:1;;;;;;;;;;;;;;;;3614:143;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4267:12;4260:28;;;4289:10;4310:1;4301:11;4260:53;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;4260:53:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;4260:53:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;4260:53:1;;;;;;;;;;;;;;;;4252:150;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4502:7;;;;;;;;;;;4493:30;;;4524:9;4535:7;4544:12;4558:9;4569:8;4493:85;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;4493:85:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;4493:85:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;4493:85:1;;;;;;;;;;;;;;;;4482:96;;4634:9;4593:95;;4622:10;4593:95;;4612:8;4593:95;4645:7;4654:12;4668:9;4679:8;4593:95;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2996:1699;;;;;;;:::o;1845:22::-;;;;;;;;;;;;;:::o",
-  "source": "pragma solidity 0.5.11;\n\nimport \"@openzeppelin/contracts/token/ERC20/IERC20.sol\";\nimport \"./interfaces/IERC1620.sol\";\n\n/**\n    Workflow:\n    1. User approves SealedSablier contract to spend desired amount of tokens\n    2. User calls SealedSablier createStream() function. This function does in one transaction:\n        a) transfer amount of tokens approved previously to itself\n        b) approve Sablier contract to spend tokens that are now owned by SealedSablier contract\n        c) Also approve msg.sender to spend tokens (See below why this is necessary)\n        d) calls createStream() on Sablier contract. Sablier contract does:\n            a) create stream where SealedSablier contract is the sender\n            b) transfer previously approved tokens from SealedSablier contract to Sablier\n\n     Result:\n       - A new stream for recipient is created, with the SealedSablier contract as sender\n       - Since the user is not the Sender he can not cancel or modify the stream anymore\n\n     Benefits:\n       - No risk of losing funds in temporary wallet due to browser/system crash or similar\n       - No need to have the user transfer both ETH (to pay gas) and Token into temporary wallet to create\n         a stream\n\n     Risk:\n       - Sablier streams can be cancelled both by sender or recipient. When a stream is cancelled,\n         remaining funds will be transferred back to the sender.\n         In this scenario the creator can not cancel the stream, but the receiver could still do it.\n         This means the funds will be sent back to the SealedSablier contract, where they will be\n         locked forever.\n         To enable the stream creator to salvage these returned funds I'm approving the sender to spend\n         any funds that end up in this contract - See \"Escape hatch\" notice below.\n*/\n\ncontract SealedSablier {\n\n    address public Sablier;\n\n    /**\n     * @notice Emits when a sealed stream is successfully created.\n     */\n    event CreateSealedStream(\n        uint256 indexed streamId,\n        address indexed sender,\n        address indexed recipient,\n        uint256 deposit,\n        address tokenAddress,\n        uint256 startTime,\n        uint256 stopTime\n    );\n\n    constructor(address _Sablier) public {\n        Sablier = _Sablier;\n    }\n\n    /**\n     * @notice Creates a stream on Sablier on behalf of the real user.\n     * @dev Throws if the contract is not allowed to transfer enough tokens from msg.sender.\n     *  Throws if approval of tokens for Sablier contract fails\n     *  See function \"createStream\" in Sablier.sol for more details\n     * @param recipient The address towards which the money is streamed.\n     * @param deposit The amount of money to be streamed.\n     * @param tokenAddress The ERC20 token to use as streaming currency.\n     * @param startTime The unix timestamp for when the stream starts.\n     * @param stopTime The unix timestamp for when the stream stops.\n     * @return The uint256 id of the newly created stream.\n     */\n    function createStream(address recipient, uint256 deposit, address tokenAddress, uint256 startTime, uint256 stopTime)\n        public\n        returns (uint256 streamId)\n    {\n        // Note - Not doing any input validation here, as this is done anyway in the Sablier contract\n\n        // transfer tokens to be deposited to self. Will fail if not approved by msg.sender.\n        require(\n            IERC20(tokenAddress).transferFrom(msg.sender, address(this), deposit),\n            \"failed to transfer tokens to SealedSablier contract\"\n        );\n\n        // approve Sablier to spend the tokens I just acquired\n        require(IERC20(tokenAddress).approve(Sablier, deposit),\n            \"failed to approve tokens from SealedSablier contract to Sablier\"\n        );\n\n        // \"Escape hatch\" - We need to prevent locking funds forever in case recipient cancels stream and funds\n        // end up in this contract:\n        // Approve sender to transfer tokens owned by contract. Setting approval to MAX_UINT (~uint256(0)), as\n        // in worst case there might be multiple streams cancelled, so we don't know the total amount that might\n        // need rescue! Could instead use \"increaseApproval\" if it would be supported by all ERC20 contracts...\n        require(IERC20(tokenAddress).approve(msg.sender, ~uint256(0)),\n            \"failed to approve tokens from SealedSablier contract to Creator\"\n        );\n\n        // create stream on Sablier contract and return the streamID\n        streamId = IERC1620(Sablier).createStream(recipient, deposit, tokenAddress, startTime, stopTime);\n        emit CreateSealedStream(streamId, msg.sender, recipient, deposit, tokenAddress, startTime, stopTime);\n    }\n}\n",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.11+commit.c082d0b4\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"deposit\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"tokenAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"stopTime\",\"type\":\"uint256\"}],\"name\":\"createStream\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"streamId\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"Sablier\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_Sablier\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"streamId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"deposit\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"stopTime\",\"type\":\"uint256\"}],\"name\":\"CreateSealedStream\",\"type\":\"event\"}],\"devdoc\":{\"methods\":{\"createStream(address,uint256,address,uint256,uint256)\":{\"details\":\"Throws if the contract is not allowed to transfer enough tokens from msg.sender. Throws if approval of tokens for Sablier contract fails See function \\\"createStream\\\" in Sablier.sol for more details\",\"params\":{\"deposit\":\"The amount of money to be streamed.\",\"recipient\":\"The address towards which the money is streamed.\",\"startTime\":\"The unix timestamp for when the stream starts.\",\"stopTime\":\"The unix timestamp for when the stream stops.\",\"tokenAddress\":\"The ERC20 token to use as streaming currency.\"},\"return\":\"The uint256 id of the newly created stream.\"}}},\"userdoc\":{\"methods\":{\"createStream(address,uint256,address,uint256,uint256)\":{\"notice\":\"Creates a stream on Sablier on behalf of the real user.\"}},\"notice\":\"Workflow: 1. User approves SealedSablier contract to spend desired amount of tokens 2. User calls SealedSablier createStream() function. This function does in one transaction: a) transfer amount of tokens approved previously to itself b) approve Sablier contract to spend tokens that are now owned by SealedSablier contract c) Also approve msg.sender to spend tokens (See below why this is necessary) d) calls createStream() on Sablier contract. Sablier contract does: a) create stream where SealedSablier contract is the sender b) transfer previously approved tokens from SealedSablier contract to Sablier Result: - A new stream for recipient is created, with the SealedSablier contract as sender - Since the user is not the Sender he can not cancel or modify the stream anymore Benefits: - No risk of losing funds in temporary wallet due to browser/system crash or similar - No need to have the user transfer both ETH (to pay gas) and Token into temporary wallet to create a stream Risk: - Sablier streams can be cancelled both by sender or recipient. When a stream is cancelled, remaining funds will be transferred back to the sender. In this scenario the creator can not cancel the stream, but the receiver could still do it. This means the funds will be sent back to the SealedSablier contract, where they will be locked forever. To enable the stream creator to salvage these returned funds I'm approving the sender to spend any funds that end up in this contract - See \\\"Escape hatch\\\" notice below.\"}},\"settings\":{\"compilationTarget\":{\"/home/michael/WebstormProjects/web3Inheritance/contracts/SealedSablier.sol\":\"SealedSablier\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/michael/WebstormProjects/web3Inheritance/contracts/SealedSablier.sol\":{\"keccak256\":\"0xeb718e07d4dba5b5c76a8921da0901512ff0c662fe36f2795e18202a0e36932e\",\"urls\":[\"bzz-raw://a87f3a8bfff190a3d41f485098c6200cb4bc024f4b18597b91ae1fc15b856035\",\"dweb:/ipfs/QmbxNqwNk1ZTun8K4CfrzMBj3XdK8doDCYGCZ914kxHXKU\"]},\"/home/michael/WebstormProjects/web3Inheritance/contracts/interfaces/IERC1620.sol\":{\"keccak256\":\"0xf9969d5b243cc70b976281ba682fc0189c182eb0e57dba3969dc754b7413b934\",\"urls\":[\"bzz-raw://6695d8482830c00d23023dafa0ff8b8b15c8b10720596bd25207e33b222a3030\",\"dweb:/ipfs/QmNSfN3vdHf2TWygXraSjjQbuT5svyYtWeW2n469rmgdFU\"]},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xe5bb0f57cff3e299f360052ba50f1ea0fff046df2be070b6943e0e3c3fdad8a9\",\"urls\":[\"bzz-raw://59fd025151435da35faa8093a5c7a17de02de9d08ad27275c5cdf05050820d91\",\"dweb:/ipfs/QmQMvwEcPhoRXzbXyrdoeRtvLoifUW9Qh7Luho7bmUPRkc\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b506040516108343803806108348339818101604052602081101561003357600080fd5b8101908080519060200190929190505050806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550506107a0806100946000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063cc1b4bf61461003b578063d1ecf20c146100d1575b600080fd5b6100bb600480360360a081101561005157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291908035906020019092919050505061011b565b6040518082815260200191505060405180910390f35b6100d9610695565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008373ffffffffffffffffffffffffffffffffffffffff166323b872dd3330886040518463ffffffff1660e01b8152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019350505050602060405180830381600087803b1580156101d857600080fd5b505af11580156101ec573d6000803e3d6000fd5b505050506040513d602081101561020257600080fd5b8101908080519060200190929190505050610268576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260338152602001806107396033913960400191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff1663095ea7b36000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff16876040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561031057600080fd5b505af1158015610324573d6000803e3d6000fd5b505050506040513d602081101561033a57600080fd5b81019080805190602001909291905050506103a0576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603f8152602001806106bb603f913960400191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff1663095ea7b3336000196040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561042957600080fd5b505af115801561043d573d6000803e3d6000fd5b505050506040513d602081101561045357600080fd5b81019080805190602001909291905050506104b9576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603f8152602001806106fa603f913960400191505060405180910390fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663cc1b4bf687878787876040518663ffffffff1660e01b8152600401808673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018581526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200182815260200195505050505050602060405180830381600087803b1580156105a557600080fd5b505af11580156105b9573d6000803e3d6000fd5b505050506040513d60208110156105cf57600080fd5b810190808051906020019092919050505090508573ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16827fca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce888888888604051808581526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200182815260200194505050505060405180910390a495945050505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fe6661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f205361626c6965726661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f2043726561746f726661696c656420746f207472616e7366657220746f6b656e7320746f205365616c65645361626c69657220636f6e7472616374a265627a7a72315820b2e8ee35ea5c846f95c3d183294cadaf3b70060bed6f8addd8a12dfc64803eb564736f6c634300050b0032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c8063cc1b4bf61461003b578063d1ecf20c146100d1575b600080fd5b6100bb600480360360a081101561005157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291908035906020019092919050505061011b565b6040518082815260200191505060405180910390f35b6100d9610695565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008373ffffffffffffffffffffffffffffffffffffffff166323b872dd3330886040518463ffffffff1660e01b8152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019350505050602060405180830381600087803b1580156101d857600080fd5b505af11580156101ec573d6000803e3d6000fd5b505050506040513d602081101561020257600080fd5b8101908080519060200190929190505050610268576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260338152602001806107396033913960400191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff1663095ea7b36000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff16876040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561031057600080fd5b505af1158015610324573d6000803e3d6000fd5b505050506040513d602081101561033a57600080fd5b81019080805190602001909291905050506103a0576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603f8152602001806106bb603f913960400191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff1663095ea7b3336000196040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561042957600080fd5b505af115801561043d573d6000803e3d6000fd5b505050506040513d602081101561045357600080fd5b81019080805190602001909291905050506104b9576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603f8152602001806106fa603f913960400191505060405180910390fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663cc1b4bf687878787876040518663ffffffff1660e01b8152600401808673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018581526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200182815260200195505050505050602060405180830381600087803b1580156105a557600080fd5b505af11580156105b9573d6000803e3d6000fd5b505050506040513d60208110156105cf57600080fd5b810190808051906020019092919050505090508573ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16827fca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce888888888604051808581526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200182815260200194505050505060405180910390a495945050505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fe6661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f205361626c6965726661696c656420746f20617070726f766520746f6b656e732066726f6d205365616c65645361626c69657220636f6e747261637420746f2043726561746f726661696c656420746f207472616e7366657220746f6b656e7320746f205365616c65645361626c69657220636f6e7472616374a265627a7a72315820b2e8ee35ea5c846f95c3d183294cadaf3b70060bed6f8addd8a12dfc64803eb564736f6c634300050b0032",
+  "sourceMap": "1815:3022:1:-;;;2203:72;8:9:-1;5:2;;;30:1;27;20:12;5:2;2203:72:1;;;;;;;;;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;2203:72:1;;;;;;;;;;;;;;;;2260:8;2250:7;;:18;;;;;;;;;;;;;;;;;;2203:72;1815:3022;;;;;;",
+  "deployedSourceMap": "1815:3022:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1815:3022:1;;;;;;;;;;;;;;;;;;;;;;;;2996:1839;;;;;;13:3:-1;8;5:12;2:2;;;30:1;27;20:12;2:2;2996:1839:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;1845:22;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;2996:1839;3145:16;3401:12;3394:33;;;3428:10;3448:4;3455:7;3394:69;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;3394:69:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;3394:69:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;3394:69:1;;;;;;;;;;;;;;;;3373:167;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3629:12;3622:28;;;3651:7;;;;;;;;;;;3660;3622:46;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;3622:46:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;3622:46:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;3622:46:1;;;;;;;;;;;;;;;;3614:143;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4267:12;4260:28;;;4289:10;4310:1;4301:11;4260:53;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;4260:53:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;4260:53:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;4260:53:1;;;;;;;;;;;;;;;;4252:150;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4502:7;;;;;;;;;;;4493:30;;;4524:9;4535:7;4544:12;4558:9;4569:8;4493:85;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;4493:85:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;4493:85:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;4493:85:1;;;;;;;;;;;;;;;;4482:96;;4774:9;4733:95;;4762:10;4733:95;;4752:8;4733:95;4785:7;4794:12;4808:9;4819:8;4733:95;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2996:1839;;;;;;;:::o;1845:22::-;;;;;;;;;;;;;:::o",
+  "source": "pragma solidity 0.5.11;\n\nimport \"@openzeppelin/contracts/token/ERC20/IERC20.sol\";\nimport \"./interfaces/IERC1620.sol\";\n\n/**\n    Workflow:\n    1. User approves SealedSablier contract to spend desired amount of tokens\n    2. User calls SealedSablier createStream() function. This function does in one transaction:\n        a) transfer amount of tokens approved previously to itself\n        b) approve Sablier contract to spend tokens that are now owned by SealedSablier contract\n        c) Also approve msg.sender to spend tokens (See below why this is necessary)\n        d) calls createStream() on Sablier contract. Sablier contract does:\n            a) create stream where SealedSablier contract is the sender\n            b) transfer previously approved tokens from SealedSablier contract to Sablier\n\n     Result:\n       - A new stream for recipient is created, with the SealedSablier contract as sender\n       - Since the user is not the Sender he can not cancel or modify the stream anymore\n\n     Benefits:\n       - No risk of losing funds in temporary wallet due to browser/system crash or similar\n       - No need to have the user transfer both ETH (to pay gas) and Token into temporary wallet to create\n         a stream\n\n     Risk:\n       - Sablier streams can be cancelled both by sender or recipient. When a stream is cancelled,\n         remaining funds will be transferred back to the sender.\n         In this scenario the creator can not cancel the stream, but the receiver could still do it.\n         This means the funds will be sent back to the SealedSablier contract, where they will be\n         locked forever.\n         To enable the stream creator to salvage these returned funds I'm approving the sender to spend\n         any funds that end up in this contract - See \"Escape hatch\" notice below.\n*/\n\ncontract SealedSablier {\n\n    address public Sablier;\n\n    /**\n     * @notice Emits when a sealed stream is successfully created.\n     */\n    event CreateSealedStream(\n        uint256 indexed streamId,\n        address indexed sender,\n        address indexed recipient,\n        uint256 deposit,\n        address tokenAddress,\n        uint256 startTime,\n        uint256 stopTime\n    );\n\n    constructor(address _Sablier) public {\n        Sablier = _Sablier;\n    }\n\n    /**\n     * @notice Creates a stream on Sablier on behalf of the real user.\n     * @dev Throws if the contract is not allowed to transfer enough tokens from msg.sender.\n     *  Throws if approval of tokens for Sablier contract fails\n     *  See function \"createStream\" in Sablier.sol for more details\n     * @param recipient The address towards which the money is streamed.\n     * @param deposit The amount of money to be streamed.\n     * @param tokenAddress The ERC20 token to use as streaming currency.\n     * @param startTime The unix timestamp for when the stream starts.\n     * @param stopTime The unix timestamp for when the stream stops.\n     * @return The uint256 id of the newly created stream.\n     */\n    function createStream(address recipient, uint256 deposit, address tokenAddress, uint256 startTime, uint256 stopTime)\n        public\n        returns (uint256 streamId)\n    {\n        // Note - Not doing any input validation here, as this is done anyway in the Sablier contract\n\n        // transfer tokens to be deposited to self. Will fail if not approved by msg.sender.\n        require(\n            IERC20(tokenAddress).transferFrom(msg.sender, address(this), deposit),\n            \"failed to transfer tokens to SealedSablier contract\"\n        );\n\n        // approve Sablier to spend the tokens I just acquired\n        require(IERC20(tokenAddress).approve(Sablier, deposit),\n            \"failed to approve tokens from SealedSablier contract to Sablier\"\n        );\n\n        // \"Escape hatch\" - We need to prevent locking funds forever in case recipient cancels stream and funds\n        // end up in this contract:\n        // Approve sender to transfer tokens owned by contract. Setting approval to MAX_UINT (~uint256(0)), as\n        // in worst case there might be multiple streams cancelled, so we don't know the total amount that might\n        // need rescue! Could instead use \"increaseApproval\" if it would be supported by all ERC20 contracts...\n        require(IERC20(tokenAddress).approve(msg.sender, ~uint256(0)),\n            \"failed to approve tokens from SealedSablier contract to Creator\"\n        );\n\n        // create stream on Sablier contract and return the streamID\n        streamId = IERC1620(Sablier).createStream(recipient, deposit, tokenAddress, startTime, stopTime);\n        // log event so UI can identify streams created by this contract and enable to search for streams by\n        // sender or recipient\n        emit CreateSealedStream(streamId, msg.sender, recipient, deposit, tokenAddress, startTime, stopTime);\n    }\n}\n",
   "sourcePath": "/home/michael/WebstormProjects/web3Inheritance/contracts/SealedSablier.sol",
   "ast": {
     "absolutePath": "/home/michael/WebstormProjects/web3Inheritance/contracts/SealedSablier.sol",
@@ -526,7 +526,7 @@
             "body": {
               "id": 168,
               "nodeType": "Block",
-              "src": "3167:1528:1",
+              "src": "3167:1668:1",
               "statements": [
                 {
                   "expression": {
@@ -1439,7 +1439,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 101,
-                        "src": "4612:8:1",
+                        "src": "4752:8:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -1454,7 +1454,7 @@
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 1096,
-                          "src": "4622:3:1",
+                          "src": "4762:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
                             "typeString": "msg"
@@ -1468,7 +1468,7 @@
                         "memberName": "sender",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": null,
-                        "src": "4622:10:1",
+                        "src": "4762:10:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address_payable",
                           "typeString": "address payable"
@@ -1481,7 +1481,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 90,
-                        "src": "4634:9:1",
+                        "src": "4774:9:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -1494,7 +1494,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 92,
-                        "src": "4645:7:1",
+                        "src": "4785:7:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -1507,7 +1507,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 94,
-                        "src": "4654:12:1",
+                        "src": "4794:12:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -1520,7 +1520,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 96,
-                        "src": "4668:9:1",
+                        "src": "4808:9:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -1533,7 +1533,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 98,
-                        "src": "4679:8:1",
+                        "src": "4819:8:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -1576,7 +1576,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 78,
-                      "src": "4593:18:1",
+                      "src": "4733:18:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_uint256_$_t_address_$_t_address_$_t_uint256_$_t_address_$_t_uint256_$_t_uint256_$returns$__$",
                         "typeString": "function (uint256,address,address,uint256,address,uint256,uint256)"
@@ -1590,7 +1590,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "4593:95:1",
+                    "src": "4733:95:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
@@ -1598,7 +1598,7 @@
                   },
                   "id": 167,
                   "nodeType": "EmitStatement",
-                  "src": "4588:100:1"
+                  "src": "4728:100:1"
                 }
               ]
             },
@@ -1782,17 +1782,17 @@
               "src": "3144:18:1"
             },
             "scope": 170,
-            "src": "2996:1699:1",
+            "src": "2996:1839:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
         "scope": 171,
-        "src": "1815:2882:1"
+        "src": "1815:3022:1"
       }
     ],
-    "src": "0:4698:1"
+    "src": "0:4838:1"
   },
   "legacyAST": {
     "absolutePath": "/home/michael/WebstormProjects/web3Inheritance/contracts/SealedSablier.sol",
@@ -2194,7 +2194,7 @@
             "body": {
               "id": 168,
               "nodeType": "Block",
-              "src": "3167:1528:1",
+              "src": "3167:1668:1",
               "statements": [
                 {
                   "expression": {
@@ -3107,7 +3107,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 101,
-                        "src": "4612:8:1",
+                        "src": "4752:8:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -3122,7 +3122,7 @@
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 1096,
-                          "src": "4622:3:1",
+                          "src": "4762:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
                             "typeString": "msg"
@@ -3136,7 +3136,7 @@
                         "memberName": "sender",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": null,
-                        "src": "4622:10:1",
+                        "src": "4762:10:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address_payable",
                           "typeString": "address payable"
@@ -3149,7 +3149,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 90,
-                        "src": "4634:9:1",
+                        "src": "4774:9:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -3162,7 +3162,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 92,
-                        "src": "4645:7:1",
+                        "src": "4785:7:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -3175,7 +3175,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 94,
-                        "src": "4654:12:1",
+                        "src": "4794:12:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -3188,7 +3188,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 96,
-                        "src": "4668:9:1",
+                        "src": "4808:9:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -3201,7 +3201,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 98,
-                        "src": "4679:8:1",
+                        "src": "4819:8:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -3244,7 +3244,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 78,
-                      "src": "4593:18:1",
+                      "src": "4733:18:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_uint256_$_t_address_$_t_address_$_t_uint256_$_t_address_$_t_uint256_$_t_uint256_$returns$__$",
                         "typeString": "function (uint256,address,address,uint256,address,uint256,uint256)"
@@ -3258,7 +3258,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "4593:95:1",
+                    "src": "4733:95:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
@@ -3266,7 +3266,7 @@
                   },
                   "id": 167,
                   "nodeType": "EmitStatement",
-                  "src": "4588:100:1"
+                  "src": "4728:100:1"
                 }
               ]
             },
@@ -3450,17 +3450,17 @@
               "src": "3144:18:1"
             },
             "scope": 170,
-            "src": "2996:1699:1",
+            "src": "2996:1839:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
         "scope": 171,
-        "src": "1815:2882:1"
+        "src": "1815:3022:1"
       }
     ],
-    "src": "0:4698:1"
+    "src": "0:4838:1"
   },
   "compiler": {
     "name": "solc",
@@ -3468,32 +3468,237 @@
   },
   "networks": {
     "3": {
-      "events": {},
+      "events": {
+        "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "streamId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "deposit",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "startTime",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "stopTime",
+              "type": "uint256"
+            }
+          ],
+          "name": "CreateSealedStream",
+          "type": "event",
+          "signature": "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8"
+        }
+      },
       "links": {},
-      "address": "0xDa09cf787D16Ce8e3F6fb5aD237EAdE0D47C8C02",
-      "transactionHash": "0x2552795b0f72d0db1420f496e436de9672667f88691880768bca2d154b3b9170"
+      "address": "0x954a503cF5Ac998eE9B8E2e13597A577C2FFECbB",
+      "transactionHash": "0x76513f794a48971ac38becad1c265d56e5043f9990b6f7f8912814a91d6e2757"
     },
     "4": {
-      "events": {},
+      "events": {
+        "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "streamId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "deposit",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "startTime",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "stopTime",
+              "type": "uint256"
+            }
+          ],
+          "name": "CreateSealedStream",
+          "type": "event",
+          "signature": "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8"
+        }
+      },
       "links": {},
-      "address": "0xd81F53b142424dF1E0Bf18E1b2A8933B4DC46801",
-      "transactionHash": "0x0019c1c3b4582217ca29ef3923604c195ac58426ac46515c9d93d18da29f2112"
+      "address": "0xe02a163e390FeBE6Ba3e8dA87C6bD012401DC38c",
+      "transactionHash": "0x1ba90b3e170748b671a4dd9c3570ddced7d711fcc4c19c8060eb9b95a607f410"
     },
     "5": {
-      "events": {},
+      "events": {
+        "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "streamId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "deposit",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "startTime",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "stopTime",
+              "type": "uint256"
+            }
+          ],
+          "name": "CreateSealedStream",
+          "type": "event",
+          "signature": "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8"
+        }
+      },
       "links": {},
-      "address": "0xA34bF8bd1ae6AC572e22A23ac9d3Da0D06C4d71f",
-      "transactionHash": "0xb65da51e0df101fd8dbd29410df864fa8b9d7a6fb86828ef2649318ab7d9a9b9"
+      "address": "0xFbc007cEFC9F2d77e1D20396e62ec97904A172ed",
+      "transactionHash": "0x9b2e4eebcc8b65d1e04f891936d18d8cca631226f1437801617048d0ba281493"
     },
     "42": {
-      "events": {},
+      "events": {
+        "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "streamId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "deposit",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "startTime",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "stopTime",
+              "type": "uint256"
+            }
+          ],
+          "name": "CreateSealedStream",
+          "type": "event",
+          "signature": "0xca94f305d2e7be5f30b3dd8418fe8f48a54c4513e134440ebe52d8c42d685ce8"
+        }
+      },
       "links": {},
-      "address": "0xd81F53b142424dF1E0Bf18E1b2A8933B4DC46801",
-      "transactionHash": "0x0019c1c3b4582217ca29ef3923604c195ac58426ac46515c9d93d18da29f2112"
+      "address": "0xf9d0DF7231beCA54Ff87300376679060855Eb2AA",
+      "transactionHash": "0xc52d5b5d63961c48278120a20ac5370345e03bb3d91dcb7aba27a27f20fbe970"
     }
   },
   "schemaVersion": "3.0.20",
-  "updatedAt": "2020-01-29T10:34:40.780Z",
+  "updatedAt": "2020-01-30T09:57:33.661Z",
+  "networkType": "ethereum",
   "devdoc": {
     "methods": {
       "createStream(address,uint256,address,uint256,uint256)": {
