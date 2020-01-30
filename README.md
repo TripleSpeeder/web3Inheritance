@@ -69,10 +69,10 @@ The user can
 
 ### Contract addresses
 SealedSablier.sol is deployed on:
-- Ropsten: https://ropsten.etherscan.io/address/0xDa09cf787D16Ce8e3F6fb5aD237EAdE0D47C8C02
-- Kovan: https://kovan.etherscan.io/address/0xd81F53b142424dF1E0Bf18E1b2A8933B4DC46801
-- Rinkeby: https://rinkeby.etherscan.io/address/0xd81F53b142424dF1E0Bf18E1b2A8933B4DC46801
-- Goerli: https://goerli.etherscan.io/address/0xA34bF8bd1ae6AC572e22A23ac9d3Da0D06C4d71f
+- Ropsten: https://ropsten.etherscan.io/address/0x954a503cF5Ac998eE9B8E2e13597A577C2FFECbB
+- Kovan: https://kovan.etherscan.io/address/0xf9d0DF7231beCA54Ff87300376679060855Eb2AA
+- Rinkeby: https://rinkeby.etherscan.io/address/0xe02a163e390FeBE6Ba3e8dA87C6bD012401DC38c
+- Goerli: https://goerli.etherscan.io/address/0xFbc007cEFC9F2d77e1D20396e62ec97904A172ed
 
 ## Development
 For local development with e.g. ganache run `truffle migrate`. This will deploy
